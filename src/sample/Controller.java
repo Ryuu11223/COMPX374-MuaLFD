@@ -2,11 +2,11 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.scene.control.TreeView;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.net.*;
 import java.util.*;
@@ -39,7 +39,19 @@ public class Controller implements Initializable {
 
     @FXML
     void deleteEvent() {
-        item.getParent().getChildren().remove(item);
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setTitle("Warning!");
+        a.setHeaderText("This collection contains child elements. Are you sure you want to delete?");
+
+        if(item.getChildren().isEmpty()) {
+            item.getParent().getChildren().remove(item);
+        }
+        else{
+            Optional<ButtonType> result = a.showAndWait();
+            if(!result.isPresent() || result.get() == ButtonType.OK) {
+                item.getParent().getChildren().remove(item);
+            }
+        }
     }
 
     @FXML
