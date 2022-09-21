@@ -9,25 +9,24 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <center>
       <SplitPane dividerPositions="0.3306613226452906" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-            <SplitPane dividerPositions="0.47347994825355755, 0.5614489003880984" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+            <SplitPane dividerPositions="0.47347994825355755, 0.5614489003880984" orientation="VERTICAL" SplitPane.resizableWithParent="false">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <children>
-                        <TreeView fx:id="tvFileMenu" onContextMenuRequested="#selectItem" onMouseClicked="#selectItem" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <TreeView fx:id="tvFileMenu" onContextMenuRequested="#selectItem" onMouseClicked="#selectItem" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                <AnchorPane>
                      <children>
                         <Button fx:id="btnAdd" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#addEvent" text="Add" />
                         <Button fx:id="btnDelete" layoutX="77.0" layoutY="19.0" mnemonicParsing="false" onAction="#deleteEvent" text="Delete" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane maxWidth="-Infinity" prefHeight="2.0" prefWidth="2.0" />
               </items>
             </SplitPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
@@ -39,7 +38,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem mnemonicParsing="false" text="Import" />
+                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem mnemonicParsing="false" text="Export" />
+                  <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

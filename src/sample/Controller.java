@@ -15,11 +15,11 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        TreeItem<String> rootItem = new TreeItem<String>("XML files");
-        TreeItem<String> branchItem1 = new TreeItem<String>("Head");
-        TreeItem<String> branchItem2 = new TreeItem<String>("Pictures");
-        TreeItem<String> branchItem3 = new TreeItem<String>("Videos");
-        TreeItem<String> branchItem4 = new TreeItem<String>("Cats");
+        TreeItem<String> rootItem = new TreeItem<>("Collection 1");
+        TreeItem<String> branchItem1 = new TreeItem<>("Video");
+        TreeItem<String> branchItem2 = new TreeItem<>("PDF");
+        TreeItem<String> branchItem3 = new TreeItem<>("Map");
+        TreeItem<String> branchItem4 = new TreeItem<>("Cats");
 
         branchItem3.getChildren().add(branchItem4);
         rootItem.getChildren().addAll(branchItem1, branchItem2, branchItem3);
