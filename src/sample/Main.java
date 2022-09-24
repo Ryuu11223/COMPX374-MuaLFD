@@ -32,14 +32,10 @@ public class Main extends Application {
     void loadData() throws IOException{
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(null);
-        if (selectedFile == null) {
-            alert("This file cannot be used", Alert.AlertType.ERROR);
-            return;
-        }
         file = selectedFile;
     }
 
-    Optional<ButtonType> alert(String info, Alert.AlertType type) {
+    Optional<ButtonType> popup(String info, Alert.AlertType type) {
         Alert a = new Alert(type);
         a.setTitle("Warning!");
         a.setHeaderText(info);
