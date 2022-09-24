@@ -4,7 +4,13 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.*;
+import java.util.Optional;
 
 public class Main extends Application {
 
@@ -16,8 +22,27 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    File file;
+
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    void loadData() throws IOException{
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile == null) {
+            alert("This file cannot be used", Alert.AlertType.ERROR);
+            return;
+        }
+        file = selectedFile;
+    }
+
+    Optional<ButtonType> alert(String info, Alert.AlertType type) {
+        Alert a = new Alert(type);
+        a.setTitle("Warning!");
+        a.setHeaderText(info);
+        return a.showAndWait();
     }
 }

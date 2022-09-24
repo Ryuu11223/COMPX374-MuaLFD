@@ -8,10 +8,11 @@ import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
-public class Controller implements Initializable {
+public class Controller extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -39,19 +40,20 @@ public class Controller implements Initializable {
 
     @FXML
     void deleteEvent() {
-        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
-        a.setTitle("Warning!");
-        a.setHeaderText("This collection contains child elements. Are you sure you want to delete?");
-
         if(item.getChildren().isEmpty()) {
             item.getParent().getChildren().remove(item);
         }
         else{
-            Optional<ButtonType> result = a.showAndWait();
+            Optional<ButtonType> result = alert("This collection contains child elements. Are you sure you want to delete?", Alert.AlertType.CONFIRMATION);
             if(!result.isPresent() || result.get() == ButtonType.OK) {
                 item.getParent().getChildren().remove(item);
             }
         }
+    }
+
+    @FXML
+    void loadFile() throws IOException {
+        loadData();
     }
 
     @FXML
