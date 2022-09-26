@@ -42,6 +42,8 @@ public class Main extends Application {
 
         //Gets XML file
         FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
+        fileChooser.setInitialDirectory(new File("C:\\uni\\Uni Work\\374\\Mua v1.2.0\\Mua v1.2.0\\Mua.Unity_Data\\StreamingAssets"));
         File selectedFile = fileChooser.showOpenDialog(null);
         file = selectedFile;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
