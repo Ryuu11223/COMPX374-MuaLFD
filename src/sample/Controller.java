@@ -28,6 +28,7 @@ public class Controller extends Main implements Initializable {
 
     }
 
+
     @FXML
     private TreeView tvFileMenu;
 
@@ -44,7 +45,7 @@ public class Controller extends Main implements Initializable {
             item.getParent().getChildren().remove(item);
         }
         else{
-            Optional<ButtonType> result = popup("This collection contains child elements. Are you sure you want to delete?", Alert.AlertType.CONFIRMATION);
+            Optional<ButtonType> result = popup("This collection contains child elements. Are you sure you want to delete?", Alert.AlertType.CONFIRMATION, "Warning!");
             if(!result.isPresent() || result.get() == ButtonType.OK) {
                 item.getParent().getChildren().remove(item);
             }
