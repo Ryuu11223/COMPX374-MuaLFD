@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.shape.HLineTo;
+import javafx.scene.control.TreeItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.w3c.dom.*;
@@ -43,6 +43,7 @@ public class Main extends Application {
         //Initialise
 
         dataNodes = new ArrayList<>();
+        linkNodes = new ArrayList<>();
 
         //Gets XML file
         FileChooser fileChooser = new FileChooser();
@@ -58,16 +59,27 @@ public class Main extends Application {
             //sets root element
             Element root = d.getDocumentElement();
             //sets link elements
-            Element links = (Element) root.getElementsByTagName("links").item(0);
+            Node links = root.getElementsByTagName("links").item(0);
             //sets data node elements
             Node nodes = root.getElementsByTagName("nodes").item(0);
             //Converts XML data nodes into objects
             PopulateNodes(nodes);
 
-            for (DataNode n :dataNodes) {
+            /*for (DataNode n :dataNodes) {
                 System.out.println(n.toString());
                 n.print();
             }
+
+            System.out.println("\n========================================================================================================================================");
+
+            for (LinkNode n :linkNodes) {
+                System.out.println("\n"+n.toString());
+                n.print();
+                for (int i = 0; i < n.getChildren().size(); i++) {
+                    System.out.println("\n"+n.getChildren().get(i).toString());
+                    n.getChildren().get(i).print();
+                }
+            }*/
         }
         catch (Exception ex){
             System.out.println(ex.toString());
@@ -83,55 +95,32 @@ public class Main extends Application {
 
         //Goes through all children
         for (int i = 0; i < nl.getLength(); i++) {
-            //Checks if the element is a TEXT or ElEMENT type
+            //Checks if the element is a TEXT or ELEMENT type
             if (nl.item(i).getNodeType() == org.w3c.dom.Node.ELEMENT_NODE){
                 //Gets all attributes of child node
                 nm = nl.item(i).getAttributes();
 
                 //Creates a data node object depending on the type of tag
-                switch (nl.item(i).getNodeName()){
-                    case "printsettings":
-                        temp = new Subnodes.PrintSetting(nm);
-                        break;
-                    case "print":
-                        temp = new Subnodes.Print(nm);
-                        break;
-                    case "welcome":
-                        temp = new Subnodes.Welcome(nm);
-                        break;
-                    case "tiles":
-                        temp = new Subnodes.Tiles(nm);
-                        break;
-                    case "map":
-                        temp = new Subnodes.Map(nm);
-                        break;
-                    case "pdf":
-                        temp = new Subnodes.PDF(nm);
-                        break;
-                    case "video":
-                        temp = new Subnodes.Video(nm);
-                        break;
-                    case "audio":
-                        temp = new Subnodes.Audio(nm);
-                        break;
-                    case "presentation":
-                        temp = new Subnodes.Presentation(nm);
-                        break;
-                    case "SortedList":
-                        temp = new Subnodes.SortedList(nm);
-                        break;
-                    case "list":
-                        temp = new Subnodes.List(nm);
-                        break;
-                    case "img":
-                        temp = new Subnodes.Image(nm);
-                        break;
+                switch (nl.item(i).getNodeName()) {
+                    case "printsettings" -> temp = new Subnodes.PrintSetting(nm);
+                    case "print" -> temp = new Subnodes.Print(nm);
+                    case "welcome" -> temp = new Subnodes.Welcome(nm);
+                    case "tiles" -> temp = new Subnodes.Tiles(nm);
+                    case "map" -> temp = new Subnodes.Map(nm);
+                    case "pdf" -> temp = new Subnodes.PDF(nm);
+                    case "video" -> temp = new Subnodes.Video(nm);
+                    case "audio" -> temp = new Subnodes.Audio(nm);
+                    case "presentation" -> temp = new Subnodes.Presentation(nm);
+                    case "SortedList" -> temp = new Subnodes.SortedList(nm);
+                    case "list" -> temp = new Subnodes.List(nm);
+                    case "img" -> temp = new Subnodes.Image(nm);
                 }
                 //Add the created node
                 dataNodes.add(temp);
             }
         }
     }
+
 
     //Method for fetching the attribute value to make things easier
     public static String attrValue(NamedNodeMap n, String s){

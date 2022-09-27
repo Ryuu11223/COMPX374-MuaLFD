@@ -1,26 +1,71 @@
 package sample;
 
-import java.util.List;
-import java.util.Optional;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import java.util.*;
 
 public abstract class LinkNode {
-    private List<LinkNode> _children;
-    private Optional<DataNode> _item;
 
-    public LinkNode(){
+    private DataNode _node;
+    private LinkNode _next;
+    private final java.util.List<LinkNode> _children = new ArrayList<>();
+    private final Map<String,String> _attr = new HashMap<>();
+
+    public LinkNode() {
     }
 
-    public List<LinkNode> get_children() {
+    public LinkNode get_next() {
+        return _next;
+    }
+    public void set_next(LinkNode _next) {
+        this._next = _next;
+    }
+
+    public List<LinkNode> getChildren() {
         return _children;
     }
-    public void set_children(List<LinkNode> _children) {
-        this._children = _children;
+    public void addChildren(LinkNode children) {
+        _children.add(children);
     }
 
-    public Optional<DataNode> get_item() {
-        return _item;
+    public DataNode get_node() {
+        return _node;
     }
-    public void set_item(Optional<DataNode> _item) {
-        this._item = _item;
+    public void set_node(DataNode _node) {
+        this._node = _node;
+    }
+
+
+    public void set(String key, String value)
+    {
+        if (_attr.containsKey(key)){
+            _attr.replace(key, value);
+        }
+    }
+    public String get(String key)
+    {
+        return _attr.get(key);
+    }
+
+    public Map<String, String> getDict() {
+        return _attr;
+    }
+    public int attrSize() {
+        return _attr.size();
+    }
+
+    public void print() {
+        _attr.forEach((k,v) -> System.out.print(k+" : "+v + ", "));
+    }
+
+    public static DataNode findDataNode(String ref, List<DataNode> nodeList){
+        for (DataNode n : nodeList) {
+            if (ref.equals(n.get("id"))){
+                return n;
+            }
+        }
+        return null;
     }
 }
