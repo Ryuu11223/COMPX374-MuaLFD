@@ -1,5 +1,10 @@
 package sample;
 
+import org.w3c.dom.NodeList;
+
+import java.util.List;
+import java.util.Optional;
+
 public class Subnodes {
     public static class Image extends DataNode{
         public Image(String id, String title, String media) {

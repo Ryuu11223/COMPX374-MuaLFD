@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.shape.HLineTo;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.w3c.dom.*;
@@ -30,6 +31,8 @@ public class Main extends Application {
     File file;
     //Creates list for nodes for data objects
     static List<DataNode> dataNodes;
+    static List<LinkNode> linkNodes;
+
 
 
     public static void main(String[] args) {
@@ -38,12 +41,12 @@ public class Main extends Application {
 
     void loadData() throws IOException{
         //Initialise
+
         dataNodes = new ArrayList<>();
 
         //Gets XML file
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
-        fileChooser.setInitialDirectory(new File("C:\\uni\\Uni Work\\374\\Mua v1.2.0\\Mua v1.2.0\\Mua.Unity_Data\\StreamingAssets"));
         File selectedFile = fileChooser.showOpenDialog(null);
         file = selectedFile;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -55,7 +58,7 @@ public class Main extends Application {
             //sets root element
             Element root = d.getDocumentElement();
             //sets link elements
-            Node links = root.getElementsByTagName("links").item(0);
+            Element links = (Element) root.getElementsByTagName("links").item(0);
             //sets data node elements
             Node nodes = root.getElementsByTagName("nodes").item(0);
             //Converts XML data nodes into objects

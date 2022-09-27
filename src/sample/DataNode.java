@@ -1,8 +1,8 @@
 package sample;
 
 public class DataNode {
-    private String _desc, _media, _title,_print,_search_ignore,_header,_subtitle,_cost,_thumb, _print_queue_location, _useScrubber;
-    private int _id, _maxzoom;
+    private String _id,_desc, _media, _title,_print,_search_ignore,_header,_subtitle,_cost,_thumb, _print_queue_location, _useScrubber;
+    private int _maxzoom;
     public DataNode() {
 
     }
@@ -66,7 +66,7 @@ public class DataNode {
     public String get_subtitle() {
         return _subtitle;
     }
-    public void set_subtitle(String subtitle) {
+    public void set_subtitle(String subtitle) { 
         this._subtitle = subtitle;
     }
 
@@ -91,10 +91,10 @@ public class DataNode {
         this._maxzoom = Integer.parseInt(maxzoom);
     }
 
-    public int get_id() {
+    public String get_id() {
         return _id;
     }
     public void set_id(String id) {
-        this._id = Integer.parseInt(id);
+        this._id = id;
     }
 }
