@@ -23,12 +23,4 @@ public abstract class LinkNode {
     public void set_item(Optional<DataNode> _item) {
         this._item = _item;
     }
-
-    public Optional<DataNode> findItem(String id, List<DataNode> dataNodes){
-        return Optional.ofNullable(dataNodes.stream()
-                .filter(customer -> id.equals(customer.get_id()))
-                .findFirst()
-                .orElse(null));
-    }
-
 }

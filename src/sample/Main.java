@@ -63,6 +63,11 @@ public class Main extends Application {
             Node nodes = root.getElementsByTagName("nodes").item(0);
             //Converts XML data nodes into objects
             PopulateNodes(nodes);
+
+            for (DataNode n :dataNodes) {
+                System.out.println(n.toString());
+                n.print();
+            }
         }
         catch (Exception ex){
             System.out.println(ex.toString());
@@ -86,58 +91,44 @@ public class Main extends Application {
                 //Creates a data node object depending on the type of tag
                 switch (nl.item(i).getNodeName()){
                     case "printsettings":
-                        temp = new Subnodes.PrintSetting(attrValue(nm, "desc"),attrValue(nm, "print.queue.location"));
+                        temp = new Subnodes.PrintSetting(nm);
                         break;
                     case "print":
-                        temp = new Subnodes.Print(attrValue(nm, "title"),attrValue(nm, "cost"),attrValue(nm, "desc"));
+                        temp = new Subnodes.Print(nm);
                         break;
                     case "welcome":
-                        temp = new Subnodes.Welcome(attrValue(nm, "id"),attrValue(nm, "title"), attrValue(nm, "search.ignore"), attrValue(nm, "header"),attrValue(nm, "subtitle"));
+                        temp = new Subnodes.Welcome(nm);
                         break;
                     case "tiles":
-                        temp = new Subnodes.Tiles(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "desc"));
+                        temp = new Subnodes.Tiles(nm);
                         break;
                     case "map":
-                        temp = new Subnodes.Map(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "media"),attrValue(nm, "maxzoom"));
+                        temp = new Subnodes.Map(nm);
                         break;
                     case "pdf":
-                        temp = new Subnodes.PDF(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "media"),attrValue(nm, "thumb"));
+                        temp = new Subnodes.PDF(nm);
                         break;
                     case "video":
-                        temp = new Subnodes.Video(attrValue(nm, "id"),attrValue(nm, "desc"),attrValue(nm, "title"),attrValue(nm, "media"),attrValue(nm, "thumb"),attrValue(nm, "useScrubber"));
+                        temp = new Subnodes.Video(nm);
                         break;
                     case "audio":
-                        temp = new Subnodes.Audio(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "media"),attrValue(nm, "thumb"));
+                        temp = new Subnodes.Audio(nm);
                         break;
                     case "presentation":
-                        temp = new Subnodes.Presentation(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "desc"),attrValue(nm, "media"),attrValue(nm, "thumb"));
+                        temp = new Subnodes.Presentation(nm);
                         break;
                     case "SortedList":
-                        temp = new Subnodes.SortedList(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "desc"),attrValue(nm, "media"));
+                        temp = new Subnodes.SortedList(nm);
                         break;
                     case "list":
-                        temp = new Subnodes.List(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "desc"),attrValue(nm, "media"));
+                        temp = new Subnodes.List(nm);
                         break;
-                    //Image tag is special case because there are different combinations and arrangements of attributes
                     case "img":
-                        if (nm.getLength() == 3){
-                            temp = new Subnodes.Image(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "media"));
-                        } else if (nm.getLength() == 4) {
-                            if (nm.getNamedItem("print") == null){
-                                temp = new Subnodes.Image(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "desc"),attrValue(nm, "media"),0,0);
-                            }
-                            else {
-                                temp = new Subnodes.Image(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "media"),attrValue(nm, "print"));
-                            }
-                        }
-                        else {
-                            temp = new Subnodes.Image(attrValue(nm, "id"),attrValue(nm, "title"),attrValue(nm, "print"),attrValue(nm, "desc"),attrValue(nm, "media"));
-                        }
+                        temp = new Subnodes.Image(nm);
                         break;
                 }
                 //Add the created node
                 dataNodes.add(temp);
-                System.out.println(temp.toString());
             }
         }
     }
