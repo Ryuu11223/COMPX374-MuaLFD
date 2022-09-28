@@ -32,8 +32,9 @@ public class DataNode {
         return _attr.size();
     }
 
-    public void print() {
+    public void printAttributes() {
         _attr.forEach((k,v) -> System.out.print(k+" : "+v + ", "));
+        System.out.println("");
     }
 
     //_id,_desc, _media, _title,_print,_search_ignore,_header,_subtitle,_cost,_thumb, _print_queue_location, _useScrubber,_maxzoom

@@ -135,22 +135,19 @@ public class Subnodes {
         public Collection(NodeList children, NamedNodeMap attributes, java.util.List<DataNode> nodeList) {
             java.util.List<DataNode> temp;
 
+            //sets attributes to link
             for (int i = 0; i < attributes.getLength(); i++) {
                 this.getDict().put(attributes.item(i).getNodeName(),attributes.item(i).getNodeValue());
             }
+            //gets node for the item
             this.set_node(findDataNode(this.getDict().get("ref"),nodeList));
 
+            //
             for (int i = 0; i < children.getLength(); i++) {
                 if (children.item(i).getNodeType() == Node.ELEMENT_NODE){
                     this.addChildren(new Link(children.item(i).getAttributes(),nodeList));
-                    System.out.println("Child " + i +": " + new Link(children.item(i).getAttributes(),nodeList).toString());
-                    for (int j = 0; j < children.item(i).getAttributes().getLength(); j++) {
-                        System.out.println(children.item(i).getAttributes().item(j).getNodeName()+":"+children.item(i).getAttributes().item(j).getNodeValue());
-                    }
-
                 }
             }
-            System.out.println(" Length: " + children.getLength());
         }
 
     }

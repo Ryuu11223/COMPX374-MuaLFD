@@ -41,6 +41,7 @@ public class Controller extends Main implements Initializable {
     @FXML
     void loadFile() throws IOException {
         loadData();
+        InitialiseTree(tvFileMenu);
     }
 
     @FXML

@@ -56,8 +56,9 @@ public abstract class LinkNode {
         return _attr.size();
     }
 
-    public void print() {
+    public void printAttributes() {
         _attr.forEach((k,v) -> System.out.print(k+" : "+v + ", "));
+        System.out.println("");
     }
 
     public static DataNode findDataNode(String ref, List<DataNode> nodeList){

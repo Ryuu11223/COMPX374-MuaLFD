@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.w3c.dom.*;
@@ -31,7 +32,7 @@ public class Main extends Application {
     File file;
     //Creates list for nodes for data objects
     static List<DataNode> dataNodes;
-    static List<LinkNode> linkNodes;
+    static List<LinkNode> collectionNodes;
 
 
 
@@ -43,13 +44,12 @@ public class Main extends Application {
         //Initialise
 
         dataNodes = new ArrayList<>();
-        linkNodes = new ArrayList<>();
+        collectionNodes = new ArrayList<>();
 
         //Gets XML file
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
-        File selectedFile = fileChooser.showOpenDialog(null);
-        file = selectedFile;
+        file = fileChooser.showOpenDialog(null);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
         try{
@@ -59,11 +59,12 @@ public class Main extends Application {
             //sets root element
             Element root = d.getDocumentElement();
             //sets link elements
-            Node links = root.getElementsByTagName("links").item(0);
+            Node collectionOfLinks = root.getElementsByTagName("links").item(0);
             //sets data node elements
             Node nodes = root.getElementsByTagName("nodes").item(0);
             //Converts XML data nodes into objects
             PopulateNodes(nodes);
+            PopulateLinks(collectionOfLinks);
 
             /*for (DataNode n :dataNodes) {
                 System.out.println(n.toString());
@@ -117,6 +118,40 @@ public class Main extends Application {
                 }
                 //Add the created node
                 dataNodes.add(temp);
+            }
+        }
+    }
+
+    public static void PopulateLinks(Node collection){
+        NodeList sel = collection.getChildNodes();
+        LinkNode temp = null;
+
+        for (int i = 0; i < sel.getLength(); i++) {
+            if(sel.item(i).getNodeType() == Node.ELEMENT_NODE){
+                temp = new Subnodes.Collection(sel.item(i).getChildNodes(),sel.item(i).getAttributes(),dataNodes);
+                collectionNodes.add(temp);
+            }
+        }
+    }
+
+    public static void InitialiseTree(TreeView<LinkNode> tree){
+        for (LinkNode c :collectionNodes) {
+            if (c.getDict().containsKey("id") && c.get("id").equals("1")){
+                tree.setRoot(new TreeItem<>(c.getChildren().get(0)));
+                InitialiseBranches(tree.getRoot());
+            }
+        }
+    }
+
+    public static void InitialiseBranches(TreeItem<LinkNode> treeItem){
+        TreeItem temp;
+        for (LinkNode c :collectionNodes) {
+            if (c.get("ref").equals(treeItem.getValue().get("ref"))){
+                for ( LinkNode l :c.getChildren()) {
+                    temp = new TreeItem<>(l);
+                    treeItem.getChildren().add(temp);
+                    InitialiseBranches(temp);
+                }
             }
         }
     }
