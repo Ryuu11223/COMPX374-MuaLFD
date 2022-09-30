@@ -9,18 +9,10 @@ import java.util.*;
 public abstract class LinkNode {
 
     private DataNode _node;
-    private LinkNode _next;
     private final java.util.List<LinkNode> _children = new ArrayList<>();
     private final Map<String,String> _attr = new HashMap<>();
 
     public LinkNode() {
-    }
-
-    public LinkNode get_next() {
-        return _next;
-    }
-    public void set_next(LinkNode _next) {
-        this._next = _next;
     }
 
     public List<LinkNode> getChildren() {

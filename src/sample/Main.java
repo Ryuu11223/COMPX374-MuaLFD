@@ -1,23 +1,25 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Main extends Application {
 
@@ -156,8 +158,33 @@ public class Main extends Application {
         }
     }
 
+    public static void InitialiseProperties(LinkNode item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument,TableView<Map.Entry<String, String>> tblvProperties){
 
-    //Method for fetching the attribute value to make things easier
+        Map<String,String> map = item.get_node().getDict();
+
+        property.setId("Key");
+        property.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
+
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> p) {
+                return new SimpleStringProperty(p.getValue().getKey());
+            }
+        });
+
+        argument.setId("Value");
+        argument.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
+
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> p) {
+                return new SimpleStringProperty(p.getValue().getValue());
+            }
+        });
+
+        ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList(map.entrySet());
+        tblvProperties.setItems(items);
+        System.out.println(tblvProperties.isVisible() + " " + property.isVisible() + " " + argument.isVisible());
+    }
+
     public static String attrValue(NamedNodeMap n, String s){
         return n.getNamedItem(s).getNodeValue().toString();
     }

@@ -19,6 +19,15 @@ public class Controller extends Main implements Initializable {
     private TreeView<LinkNode> tvFileMenu;
 
     @FXML
+    private TableView<Map.Entry<String, String>> tblvProperties;
+
+    @FXML
+    private TableColumn<Map.Entry<String, String>, String> property;
+    @FXML
+    private TableColumn<Map.Entry<String, String>, String> argument;
+
+
+    @FXML
     void addEvent() {
 
     }
@@ -39,6 +48,10 @@ public class Controller extends Main implements Initializable {
     }
 
     @FXML
+    void textChanged(){
+    }
+
+    @FXML
     void loadFile() throws IOException {
         loadData();
         InitialiseTree(tvFileMenu);
@@ -46,6 +59,7 @@ public class Controller extends Main implements Initializable {
 
     @FXML
     private void selectItem() {
-        item = tvFileMenu.getSelectionModel().getSelectedItem();
+        LinkNode selectedItem = tvFileMenu.getSelectionModel().getSelectedItem().getValue();
+        InitialiseProperties(selectedItem,property,argument,tblvProperties);
     }
 }
