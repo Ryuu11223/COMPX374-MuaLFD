@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -44,7 +45,6 @@ public class Main extends Application {
 
     void loadData() throws IOException{
         //Initialise
-
         dataNodes = new ArrayList<>();
         collectionNodes = new ArrayList<>();
 
@@ -67,22 +67,6 @@ public class Main extends Application {
             //Converts XML data nodes into objects
             PopulateNodes(nodes);
             PopulateLinks(collectionOfLinks);
-
-            /*for (DataNode n :dataNodes) {
-                System.out.println(n.toString());
-                n.print();
-            }
-
-            System.out.println("\n========================================================================================================================================");
-
-            for (LinkNode n :linkNodes) {
-                System.out.println("\n"+n.toString());
-                n.print();
-                for (int i = 0; i < n.getChildren().size(); i++) {
-                    System.out.println("\n"+n.getChildren().get(i).toString());
-                    n.getChildren().get(i).print();
-                }
-            }*/
         }
         catch (Exception ex){
             System.out.println(ex.toString());
@@ -137,6 +121,7 @@ public class Main extends Application {
     }
 
     public static void InitialiseTree(TreeView<LinkNode> tree){
+        //Initialise tree and root method
         for (LinkNode c :collectionNodes) {
             if (c.getDict().containsKey("id") && c.get("id").equals("1")){
                 tree.setRoot(new TreeItem<>(c.getChildren().get(0)));
@@ -146,7 +131,8 @@ public class Main extends Application {
     }
 
     public static void InitialiseBranches(TreeItem<LinkNode> treeItem){
-        TreeItem temp;
+        //Initialise branches of the branch that is passed into method
+        TreeItem<LinkNode> temp;
         for (LinkNode c :collectionNodes) {
             if (c.get("ref").equals(treeItem.getValue().get("ref"))){
                 for ( LinkNode l :c.getChildren()) {
@@ -160,8 +146,10 @@ public class Main extends Application {
 
     public static void InitialiseProperties(LinkNode item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument,TableView<Map.Entry<String, String>> tblvProperties){
 
+        //Gets attribute map
         Map<String,String> map = item.get_node().getDict();
 
+        //Overwrite get method to extract from Map
         property.setId("Key");
         property.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
 
@@ -171,6 +159,7 @@ public class Main extends Application {
             }
         });
 
+        //Overwrite get method to extract from Map
         argument.setId("Value");
         argument.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
 
@@ -180,13 +169,13 @@ public class Main extends Application {
             }
         });
 
+        //Sets all items of node into table view
         ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList(map.entrySet());
         tblvProperties.setItems(items);
-        System.out.println(tblvProperties.isVisible() + " " + property.isVisible() + " " + argument.isVisible());
-    }
 
-    public static String attrValue(NamedNodeMap n, String s){
-        return n.getNamedItem(s).getNodeValue().toString();
+        //Makes the argument column editable. Must double-click.
+        tblvProperties.setEditable(true);
+        argument.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
     //Popup method

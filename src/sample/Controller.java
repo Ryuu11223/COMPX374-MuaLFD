@@ -48,6 +48,11 @@ public class Controller extends Main implements Initializable {
     }
 
     @FXML
+    void onEditStart(){
+        
+    }
+
+    @FXML
     void textChanged(){
     }
 

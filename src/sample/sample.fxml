@@ -31,7 +31,7 @@
                   <TableView fx:id="tblvProperties" onInputMethodTextChanged="#textChanged" prefHeight="200.0" prefWidth="200.0">
                     <columns>
                       <TableColumn fx:id="property" prefWidth="110.0" text="Property" />
-                      <TableColumn fx:id="argument" prefWidth="261.0" text="Arguments" />
+                      <TableColumn fx:id="argument" onEditStart="#onEditStart" prefWidth="261.0" text="Arguments" />
                     </columns>
                   </TableView>
               </items>
