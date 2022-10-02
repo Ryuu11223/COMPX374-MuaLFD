@@ -5,31 +5,38 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <center>
-      <SplitPane dividerPositions="0.3306613226452906" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane dividerPositions="0.374749498997996" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
             <SplitPane dividerPositions="0.47347994825355755, 0.5614489003880984" orientation="VERTICAL" SplitPane.resizableWithParent="false">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <children>
-                        <TreeView fx:id="tvFileMenu" onContextMenuRequested="#selectItem" onMouseClicked="#selectItem" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <TreeView fx:id="tvFileMenu" onMouseClicked="#selectItem" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                 <AnchorPane>
                      <children>
                         <Button fx:id="btnAdd" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#addEvent" text="Add" />
-                        <Button fx:id="btnDelete" layoutX="77.0" layoutY="19.0" mnemonicParsing="false" onAction="#deleteEvent" text="Delete" />
+                        <Button fx:id="btnDelete" layoutX="77.0" layoutY="19.0" mnemonicParsing="false" onAction="#deleteEventHandler" text="Delete" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane maxWidth="-Infinity" prefHeight="2.0" prefWidth="2.0" />
+                  <TableView fx:id="tblvProperties" onInputMethodTextChanged="#textChanged" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="property" prefWidth="110.0" text="Property" />
+                      <TableColumn fx:id="argument" onEditStart="#onEditStart" prefWidth="261.0" text="Arguments" />
+                    </columns>
+                  </TableView>
               </items>
             </SplitPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" />
         </items>
       </SplitPane>
    </center>
@@ -38,10 +45,8 @@
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem mnemonicParsing="false" text="Import" />
                   <MenuItem mnemonicParsing="false" onAction="#loadFile" text="Load" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Export" />
+                  <MenuItem mnemonicParsing="false" onAction="#exportEvent" text="Export" />
                   <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>

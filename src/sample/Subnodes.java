@@ -15,7 +15,7 @@ public class Subnodes {
 
         @Override
         public String toString() {
-            return "Image".toString();
+            return "img".toString();
         }
     }
 
@@ -26,7 +26,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "PrintSettings".toString();
+            return "printsettings".toString();
         }
     }
 
@@ -36,7 +36,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Print".toString();
+            return "print".toString();
         }
     }
 
@@ -46,7 +46,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Welcome".toString();
+            return "welcome".toString();
         }
     }
 
@@ -56,7 +56,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Tiles".toString();
+            return "tiles".toString();
         }
     }
 
@@ -66,7 +66,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Map".toString();
+            return "map".toString();
         }
     }
 
@@ -76,7 +76,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "PDF".toString();
+            return "pdf".toString();
         }
     }
 
@@ -86,7 +86,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Video".toString();
+            return "video".toString();
         }
     }
 
@@ -96,7 +96,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Audio".toString();
+            return "audio".toString();
         }
     }
 
@@ -106,7 +106,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Presentation".toString();
+            return "presentation".toString();
         }
     }
 
@@ -116,7 +116,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "Sorted List".toString();
+            return "SortedList".toString();
         }
     }
 
@@ -126,7 +126,7 @@ public class Subnodes {
         }
         @Override
         public String toString() {
-            return "List".toString();
+            return "list".toString();
         }
     }
 
@@ -149,9 +149,6 @@ public class Subnodes {
                 }
             }
         }
-
-
-
     }
 
     public static class Link extends LinkNode{

@@ -19,6 +19,11 @@ import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.*;
 
@@ -219,6 +224,132 @@ public class Main extends Application {
                         return;
                     }
                 }
+            }
+        }
+    }
+
+    public void exportFile() {
+        if (file == null) {
+            Optional<ButtonType> result = popup("No XML has been loaded to export!", Alert.AlertType.CONFIRMATION, "Warning!");
+            return;
+        }
+
+        try {
+            Document document = createExportFile();
+
+            if (document == null) {
+                Optional<ButtonType> result = popup("This XML Data Cannot Be Generated Into A File", Alert.AlertType.CONFIRMATION, "Warning!");
+                return;
+            }
+
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(document);
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save");
+            fileChooser.setInitialFileName("DemoRoot.xml");
+
+            File userSelection = fileChooser.showSaveDialog(null);
+
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
+
+            StreamResult result = new StreamResult(userSelection);
+            transformer.transform(source, result);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    static Document createExportFile() {
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder bBuilder = dbFactory.newDocumentBuilder();
+            Document document = bBuilder.newDocument();
+
+            Element rootElement = document.createElement("root");
+            document.appendChild(rootElement);
+
+            Element linksElement = document.createElement("links");
+            rootElement.appendChild(linksElement);
+
+            Element nodesElement = document.createElement("nodes");
+            rootElement.appendChild(nodesElement);
+
+            Element nodesLocal = document.createElement("localization");
+            setAttr(document, nodesLocal, "default", "eng");
+            rootElement.appendChild(nodesLocal);
+
+            Element locale = quickAddNode(document, nodesLocal, "locale", "id", "eng");
+            setAttr(document, locale, "title", "English");
+            setAttr(document, locale, "media", "table/us_flag.png");
+
+            Element locale2 = quickAddNode(document, nodesLocal, "locale", "id", "mri/mao");
+            setAttr(document, locale2, "title", "Māori");
+            setAttr(document, locale2, "media", "table/mao_flag.png");
+
+            Element alt = quickAddNode(document, locale2, "alt", "ref", "2");
+            setAttr(document, alt, "title", "Mua Whakaaturanga Whakamahinga");
+            setAttr(document, alt, "desc", "");
+
+            Element alt2 = quickAddNode(document, locale2, "alt", "ref", "3");
+            setAttr(document, alt2, "title", "Ngā kohikohinga me nga whakaaturanga");
+            setAttr(document, alt2, "desc", "");
+
+            addNodes(document, nodesElement);
+            addLinks(document, linksElement);
+
+            return document;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    static void setAttr(Document doc, Element element, String type, String value){
+        Attr attr = doc.createAttribute(type);
+        attr.setValue(value);
+        element.setAttributeNode(attr);
+    }
+
+    static Element quickAddNode(Document doc, Element parentElement, String name, String type, String value){
+        Element element = doc.createElement(name);
+        setAttr(doc, element, type, value);
+        parentElement.appendChild(element);
+        return element;
+    }
+
+    static Element quickAddNode(Document doc, Element parentElement, String name){
+        Element element = doc.createElement(name);
+        parentElement.appendChild(element);
+        return element;
+    }
+
+    static void addNodes(Document doc, Element element){
+        String key, value;
+        for (DataNode x : dataNodes) {
+            Element elem = quickAddNode(doc, element, x.toString());
+            x.getDict().forEach((i, k) -> {
+                setAttr(doc, elem, i, k);
+            } );
+        }
+    }
+
+    static void addLinks(Document doc, Element element) {
+        for (LinkNode x : collectionNodes) {
+            Element elemSel = quickAddNode(doc, element, "sel");
+            x.getDict().forEach((i, k) -> {
+                setAttr(doc, elemSel, i, k);
+            } );
+            for (LinkNode y : x.getChildren()) {
+                Element elemLink = quickAddNode(doc, elemSel, "link");
+                y.getDict().forEach((i, k) -> {
+                    setAttr(doc, elemLink, i, k);
+                } );
             }
         }
     }

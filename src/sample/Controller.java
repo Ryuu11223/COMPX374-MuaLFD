@@ -36,14 +36,16 @@ public class Controller extends Main implements Initializable {
 
     @FXML
     void deleteEventHandler() {
-
         deleteEvent(item);
+    }
 
+    @FXML
+    void exportEvent(){
+        exportFile();
     }
 
     @FXML
     void onEditStart(){
-        
     }
 
     @FXML
