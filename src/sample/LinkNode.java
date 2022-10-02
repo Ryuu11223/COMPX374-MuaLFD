@@ -61,4 +61,13 @@ public abstract class LinkNode {
         }
         return null;
     }
+
+    public DataNode removeChild(LinkNode child){
+        if(_children.contains(child)){
+
+            _children.remove(child);
+            return child.get_node();
+        }
+        return null;
+    }
 }

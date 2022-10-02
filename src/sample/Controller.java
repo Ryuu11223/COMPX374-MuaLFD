@@ -35,16 +35,10 @@ public class Controller extends Main implements Initializable {
     TreeItem<LinkNode> item;
 
     @FXML
-    void deleteEvent() {
-        if(item.getChildren().isEmpty()) {
-            item.getParent().getChildren().remove(item);
-        }
-        else{
-            Optional<ButtonType> result = popup("This collection contains child elements. Are you sure you want to delete?", Alert.AlertType.CONFIRMATION, "Warning!");
-            if(result.isEmpty() || result.get() == ButtonType.OK) {
-                item.getParent().getChildren().remove(item);
-            }
-        }
+    void deleteEventHandler() {
+
+        deleteEvent(item);
+
     }
 
     @FXML
@@ -65,6 +59,7 @@ public class Controller extends Main implements Initializable {
     @FXML
     private void selectItem() {
         LinkNode selectedItem = tvFileMenu.getSelectionModel().getSelectedItem().getValue();
+        item = tvFileMenu.getSelectionModel().getSelectedItem();
         InitialiseProperties(selectedItem,property,argument,tblvProperties);
     }
 }

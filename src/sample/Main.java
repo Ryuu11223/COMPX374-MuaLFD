@@ -185,4 +185,41 @@ public class Main extends Application {
         a.setHeaderText(info);
         return a.showAndWait();
     }
+
+
+    public void deleteEvent(TreeItem<LinkNode> item){
+
+
+        if(item.getChildren().isEmpty()) {
+            for (LinkNode l:collectionNodes) {
+                //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
+                DataNode temp= l.removeChild(item.getValue());
+                if(dataNodes.contains(temp)){
+                    //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
+                    //System.out.println("in nodes? "+dataNodes.contains(temp));
+                    dataNodes.remove(temp);
+                    //System.out.println("in nodes? "+dataNodes.contains(temp));
+                    item.getParent().getChildren().remove(item);
+                    return;
+                }
+            }
+        }
+        else{
+            Optional<ButtonType> result = popup("This collection contains child elements. Are you sure you want to delete?", Alert.AlertType.CONFIRMATION, "Warning!");
+            if(result.isEmpty() || result.get() == ButtonType.OK) {
+                for (LinkNode l:collectionNodes) {
+                    //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
+                    DataNode temp= l.removeChild(item.getValue());
+                    if(dataNodes.contains(temp)){
+                        //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
+                        //System.out.println("in nodes? "+dataNodes.contains(temp));
+                        dataNodes.remove(temp);
+                        //System.out.println("in nodes? "+dataNodes.contains(temp));
+                        item.getParent().getChildren().remove(item);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 }
