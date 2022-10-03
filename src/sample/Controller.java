@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -12,6 +13,15 @@ public class Controller extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        argument.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Map.Entry<String, String>, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Map.Entry<String, String>, String> event) {
+                String key = event.getRowValue().getKey(), value = event.getNewValue();
+
+                if (propertyChange(key, value, item))
+                    selectItem();
+            }
+        });
     }
 
 
@@ -24,8 +34,7 @@ public class Controller extends Main implements Initializable {
     @FXML
     private TableColumn<Map.Entry<String, String>, String> property;
     @FXML
-    private TableColumn<Map.Entry<String, String>, String> argument;
-
+    TableColumn<Map.Entry<String, String>, String> argument;
 
     @FXML
     void addEvent() {
@@ -44,13 +53,6 @@ public class Controller extends Main implements Initializable {
         exportFile();
     }
 
-    @FXML
-    void onEditStart(){
-    }
-
-    @FXML
-    void textChanged(){
-    }
 
     @FXML
     void loadFile() throws IOException {

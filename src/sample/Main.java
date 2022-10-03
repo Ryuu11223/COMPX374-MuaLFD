@@ -184,7 +184,7 @@ public class Main extends Application {
     }
 
     //Popup method
-    Optional<ButtonType> popup(String info, Alert.AlertType type, String title) {
+    static Optional<ButtonType> popup(String info, Alert.AlertType type, String title) {
         Alert a = new Alert(type);
         a.setTitle(title);
         a.setHeaderText(info);
@@ -230,7 +230,7 @@ public class Main extends Application {
 
     public void exportFile() {
         if (file == null) {
-            Optional<ButtonType> result = popup("No XML has been loaded to export!", Alert.AlertType.CONFIRMATION, "Warning!");
+            popup("No XML has been loaded to export!", Alert.AlertType.CONFIRMATION, "Warning!");
             return;
         }
 
@@ -352,5 +352,33 @@ public class Main extends Application {
                 } );
             }
         }
+    }
+
+    static boolean propertyChange(String key, String value, TreeItem<LinkNode> item) {
+        if (key.equals("id"))
+            for (DataNode d: dataNodes) {
+                if (d.get("id") != null)
+                    if (d.get("id").equals(value) || value.equals("1")) {
+                        popup("This id Already exists", Alert.AlertType.CONFIRMATION, "Warning!");
+                        return true;
+                    }
+            }
+
+        for (LinkNode n : collectionNodes) {
+            for (LinkNode k: n.getChildren()) {
+                if (k.get_node().equals(item.getValue().get_node())) {
+                    for (LinkNode i: collectionNodes) {
+                        if(i.get("ref").equals(k.get("ref"))) {
+                            i.set("ref", value);
+                        }
+                    }
+                    k.get_node().set(key, value);
+                    if (key.equals("id")) {
+                        k.set("ref" , value);
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

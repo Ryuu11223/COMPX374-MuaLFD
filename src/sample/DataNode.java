@@ -17,11 +17,10 @@ public class DataNode {
     public void set(String key, String value)
     {
         if (_attr.containsKey(key)){
-            _attr.replace(key, value);
+            _attr.put(key, value);
         }
     }
-    public String get(String key)
-    {
+    public String get(String key) {
         return _attr.get(key);
     }
 
