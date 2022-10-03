@@ -72,6 +72,7 @@ public class Main extends Application {
             //Converts XML data nodes into objects
             PopulateNodes(nodes);
             PopulateLinks(collectionOfLinks);
+
         }
         catch (Exception ex){
             System.out.println(ex.toString());
@@ -129,7 +130,7 @@ public class Main extends Application {
         //Initialise tree and root method
         for (LinkNode c :collectionNodes) {
             if (c.getDict().containsKey("id") && c.get("id").equals("1")){
-                tree.setRoot(new TreeItem<>(c.getChildren().get(0)));
+                tree.setRoot(new TreeItem<LinkNode>(c.getChildren().get(0)));
                 InitialiseBranches(tree.getRoot());
             }
         }
@@ -141,7 +142,7 @@ public class Main extends Application {
         for (LinkNode c :collectionNodes) {
             if (c.get("ref").equals(treeItem.getValue().get("ref"))){
                 for ( LinkNode l :c.getChildren()) {
-                    temp = new TreeItem<>(l);
+                    temp = new TreeItem<LinkNode>(l);
                     treeItem.getChildren().add(temp);
                     InitialiseBranches(temp);
                 }
@@ -191,42 +192,34 @@ public class Main extends Application {
         return a.showAndWait();
     }
 
-
     public void deleteEvent(TreeItem<LinkNode> item){
 
-
-        if(item.getChildren().isEmpty()) {
-            for (LinkNode l:collectionNodes) {
-                //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
-                DataNode temp= l.removeChild(item.getValue());
-                if(dataNodes.contains(temp)){
-                    //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
-                    //System.out.println("in nodes? "+dataNodes.contains(temp));
-                    dataNodes.remove(temp);
-                    //System.out.println("in nodes? "+dataNodes.contains(temp));
+        if(item.getChildren().isEmpty()){
+            for (LinkNode s:collectionNodes) {
+                if (s.getChildren().contains(item.getValue())){
+                    dataNodes.remove(item.getValue().get_node());
+                    item.getValue().set_node(null);
+                    s.remove(item.getValue());
                     item.getParent().getChildren().remove(item);
                     return;
                 }
             }
-        }
-        else{
-            Optional<ButtonType> result = popup("This collection contains child elements. Are you sure you want to delete?", Alert.AlertType.CONFIRMATION, "Warning!");
-            if(result.isEmpty() || result.get() == ButtonType.OK) {
-                for (LinkNode l:collectionNodes) {
-                    //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
-                    DataNode temp= l.removeChild(item.getValue());
-                    if(dataNodes.contains(temp)){
-                        //System.out.println("in collection? "+l.getChildren().contains(item.getValue()));
-                        //System.out.println("in nodes? "+dataNodes.contains(temp));
-                        dataNodes.remove(temp);
-                        //System.out.println("in nodes? "+dataNodes.contains(temp));
-                        item.getParent().getChildren().remove(item);
-                        return;
+        }else {
+            for (LinkNode s:collectionNodes) {
+                if (s.get("ref").equals(item.getValue().get("ref"))){
+                    item.getParent().getChildren().remove(item);
+                    for (LinkNode l :s.getChildren()) {
+                        dataNodes.remove(l.get_node());
                     }
+
+                    dataNodes.remove(s.get_node());
+                    collectionNodes.remove(s);
+                    return;
                 }
             }
         }
     }
+
 
     public void exportFile() {
         if (file == null) {
@@ -322,7 +315,6 @@ public class Main extends Application {
         parentElement.appendChild(element);
         return element;
     }
-
     static Element quickAddNode(Document doc, Element parentElement, String name){
         Element element = doc.createElement(name);
         parentElement.appendChild(element);

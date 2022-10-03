@@ -1,9 +1,5 @@
 package sample;
 
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import java.util.*;
 
 public abstract class LinkNode {
@@ -62,12 +58,7 @@ public abstract class LinkNode {
         return null;
     }
 
-    public DataNode removeChild(LinkNode child){
-        if(_children.contains(child)){
-
-            _children.remove(child);
-            return child.get_node();
-        }
-        return null;
+    public void remove(LinkNode l){
+        _children.remove(l);
     }
 }
