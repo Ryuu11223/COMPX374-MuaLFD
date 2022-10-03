@@ -60,8 +60,10 @@ public class Controller extends Main implements Initializable {
 
     @FXML
     private void selectItem() {
-        LinkNode selectedItem = tvFileMenu.getSelectionModel().getSelectedItem().getValue();
-        item = tvFileMenu.getSelectionModel().getSelectedItem();
-        InitialiseProperties(selectedItem,property,argument,tblvProperties);
+        if (tvFileMenu.getSelectionModel().getSelectedItem() != item){
+            LinkNode selectedItem = tvFileMenu.getSelectionModel().getSelectedItem().getValue();
+            item = tvFileMenu.getSelectionModel().getSelectedItem();
+            InitialiseProperties(selectedItem,property,argument,tblvProperties);
+        }
     }
 }
