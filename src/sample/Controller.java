@@ -44,6 +44,12 @@ public class Controller extends Main implements Initializable {
     TreeItem<LinkNode> item;
 
     @FXML
+    void addEventC() {
+        if (addChild(item))
+            InitialiseTree(tvFileMenu);
+    }
+
+    @FXML
     void deleteEventHandler() {
         deleteEvent(item);
     }

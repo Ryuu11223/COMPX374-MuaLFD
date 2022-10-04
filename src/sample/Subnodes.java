@@ -13,6 +13,10 @@ public class Subnodes {
             super(nm);
         }
 
+        public Image() {
+
+        }
+
         @Override
         public String toString() {
             return "img".toString();
@@ -152,6 +156,10 @@ public class Subnodes {
     }
 
     public static class Link extends LinkNode{
+        public Link() {
+
+        }
+
         public Link(NamedNodeMap attributes, java.util.List<DataNode> nodeList) {
             for (int i = 0; i < attributes.getLength(); i++) {
                 this.getDict().put(attributes.item(i).getNodeName(),attributes.item(i).getNodeValue());

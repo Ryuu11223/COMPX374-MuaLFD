@@ -14,6 +14,9 @@ public class DataNode {
         }
     }
 
+    public DataNode() {
+    }
+
     public void set(String key, String value)
     {
         if (_attr.containsKey(key)){

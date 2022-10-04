@@ -29,7 +29,7 @@ public abstract class LinkNode {
     public void set(String key, String value)
     {
         if (_attr.containsKey(key)){
-            _attr.replace(key, value);
+            _attr.put(key, value);
         }
     }
     public String get(String key)

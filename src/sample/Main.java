@@ -41,6 +41,7 @@ public class Main extends Application {
     //Creates list for nodes for data objects
     static List<DataNode> dataNodes;
     static List<LinkNode> collectionNodes;
+    static LinkNode tiles;
 
 
 
@@ -129,9 +130,11 @@ public class Main extends Application {
     public static void InitialiseTree(TreeView<LinkNode> tree){
         //Initialise tree and root method
         for (LinkNode c :collectionNodes) {
+            tiles = collectionNodes.get(1);
             if (c.getDict().containsKey("id") && c.get("id").equals("1")){
                 tree.setRoot(new TreeItem<LinkNode>(c.getChildren().get(0)));
                 InitialiseBranches(tree.getRoot());
+
             }
         }
     }
@@ -372,5 +375,32 @@ public class Main extends Application {
             }
         }
         return false;
+    }
+
+    static boolean addChild(TreeItem<LinkNode> item) {
+        for (LinkNode n : collectionNodes) {
+            if (n.get_node().equals(item.getValue().get_node())) {
+                System.out.println("parent");
+                addElem(n);
+                return true;
+            }
+        }
+        for (LinkNode k : tiles.getChildren()) {
+            if (k.get_node().equals(item.getValue().get_node())) {
+                System.out.println("child");
+                addElem(k);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static void addElem(LinkNode node){
+        DataNode temp = new Subnodes.Image();
+        temp.set("id", "44");
+        dataNodes.add(temp);
+        LinkNode link = new Subnodes.Link();
+        link.set_node(temp);
+        node.getChildren().add(link);
     }
 }

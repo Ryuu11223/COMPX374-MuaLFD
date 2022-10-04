@@ -24,8 +24,8 @@
                   </AnchorPane>
                 <AnchorPane>
                      <children>
-                        <Button fx:id="btnAdd" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#addEvent" text="Add" />
-                        <Button fx:id="btnDelete" layoutX="77.0" layoutY="19.0" mnemonicParsing="false" onAction="#deleteEventHandler" text="Delete" />
+                        <Button fx:id="btnDelete" layoutX="229.0" layoutY="19.0" mnemonicParsing="false" onAction="#deleteEventHandler" text="Delete" />
+                        <Button fx:id="btnAddChild" layoutX="14.0" layoutY="19.0" mnemonicParsing="false" onAction="#addEventC" prefHeight="25.0" prefWidth="81.0" text="Add C" />
                      </children>
                   </AnchorPane>
                   <TableView fx:id="tblvProperties" prefHeight="200.0" prefWidth="200.0">

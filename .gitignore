@@ -57,5 +57,5 @@ $RECYCLE.BIN/
 workspace.xml
 task.xml
 
-out
+.out
 # End of https://www.toptal.com/developers/gitignore/api/java,windows
