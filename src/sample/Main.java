@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -10,7 +9,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -26,6 +24,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class Main extends Application {
 
@@ -43,6 +42,7 @@ public class Main extends Application {
     static List<LinkNode> collectionNodes;
     static LinkNode tiles;
 
+    static HashMap<String, Integer> refCount;
 
 
     public static void main(String[] args) {
@@ -117,7 +117,8 @@ public class Main extends Application {
 
     public static void PopulateLinks(Node collection){
         NodeList sel = collection.getChildNodes();
-        LinkNode temp = null;
+        LinkNode temp;
+        refCount = new HashMap<>();
 
         for (int i = 0; i < sel.getLength(); i++) {
             if(sel.item(i).getNodeType() == Node.ELEMENT_NODE){
@@ -125,18 +126,28 @@ public class Main extends Application {
                 collectionNodes.add(temp);
             }
         }
+        //Sets a hardcoded path to tiles sel
+        tiles = collectionNodes.get(1);
+
+        for ( LinkNode c :collectionNodes) {
+            c.setLink(findLink(tiles.getChildren(), i -> i.get("ref").equals(c.get("ref"))));
+            for (LinkNode l:c.getChildren()) {
+                int count = refCount.getOrDefault(l.get("ref"), 0);
+                refCount.put(l.get("ref"), count + 1);
+            }
+        }
+
+        for (String name: refCount.keySet()) {
+            String key = name;
+            String value = refCount.get(name).toString();
+            System.out.println(key + " : " + value);
+        }
     }
 
     public static void InitialiseTree(TreeView<LinkNode> tree){
         //Initialise tree and root method
-        for (LinkNode c :collectionNodes) {
-            tiles = collectionNodes.get(1);
-            if (c.getDict().containsKey("id") && c.get("id").equals("1")){
-                tree.setRoot(new TreeItem<LinkNode>(c.getChildren().get(0)));
-                InitialiseBranches(tree.getRoot());
-
-            }
-        }
+        tree.setRoot(new TreeItem<LinkNode>((Objects.requireNonNull(findLink(collectionNodes, i -> i.getDict().containsKey("id") && i.get("id").equals("1")))).getChildren().get(0)));
+        InitialiseBranches(tree.getRoot());
     }
 
     public static void InitialiseBranches(TreeItem<LinkNode> treeItem){
@@ -161,7 +172,6 @@ public class Main extends Application {
         //Overwrite get method to extract from Map
         property.setId("Key");
         property.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<String, String>, String>, ObservableValue<String>>() {
-
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<String, String>, String> p) {
                 return new SimpleStringProperty(p.getValue().getKey());
@@ -198,35 +208,37 @@ public class Main extends Application {
     public void deleteEvent(TreeItem<LinkNode> item){
 
         if(item.getChildren().isEmpty()){
-            for (LinkNode s:collectionNodes) {
-                if (s.getChildren().contains(item.getValue())){
-                    dataNodes.remove(item.getValue().get_node());
-                    item.getValue().set_node(null);
-                    s.remove(item.getValue());
-                    item.getParent().getChildren().remove(item);
-                    return;
+            item.getParent().getChildren().remove(item);
+            updateDataNodes(item.getValue().get_node());
+            Objects.requireNonNull(findLink(collectionNodes, i -> i.getChildren().contains(item.getValue()))).remove(item.getValue());
+        }
+        else {
+            Optional<ButtonType> result = popup("This collection contains child elements. Are you sure you want to delete?", Alert.AlertType.CONFIRMATION, "Warning!");
+            if(result.isEmpty() || result.get() == ButtonType.OK) {
+                item.getParent().getChildren().remove(item);
+                LinkNode s = findLink(collectionNodes, i -> i.get("ref").equals(item.getValue().get("ref")));
+                assert s != null;
+                for (LinkNode l :s.getChildren()) {
+                    updateDataNodes(l.get_node());
                 }
-            }
-        }else {
-            for (LinkNode s:collectionNodes) {
-                if (s.get("ref").equals(item.getValue().get("ref"))){
-                    item.getParent().getChildren().remove(item);
-                    for (LinkNode l :s.getChildren()) {
-                        dataNodes.remove(l.get_node());
-                    }
-
-                    dataNodes.remove(s.get_node());
-                    collectionNodes.remove(s);
-                    return;
-                }
+                updateDataNodes(s.get_node());
+                tiles.remove(s.getLink());
+                collectionNodes.remove(s);
             }
         }
     }
 
+    static void updateDataNodes(DataNode node){
+        int count = refCount.get(node.get("id"));
+        refCount.put(node.get("id"), count - 1);
+        if (count == 1){
+            dataNodes.remove(node);
+        }
+    }
 
     public void exportFile() {
         if (file == null) {
-            popup("No XML has been loaded to export!", Alert.AlertType.CONFIRMATION, "Warning!");
+            popup("No XML has been loaded to export!", Alert.AlertType.WARNING, "Warning!");
             return;
         }
 
@@ -234,7 +246,7 @@ public class Main extends Application {
             Document document = createExportFile();
 
             if (document == null) {
-                Optional<ButtonType> result = popup("This XML Data Cannot Be Generated Into A File", Alert.AlertType.CONFIRMATION, "Warning!");
+                Optional<ButtonType> result = popup("This XML Data Cannot Be Generated Into A File", Alert.AlertType.WARNING, "Warning!");
                 return;
             }
 
@@ -402,5 +414,14 @@ public class Main extends Application {
         LinkNode link = new Subnodes.Link();
         link.set_node(temp);
         node.getChildren().add(link);
+    }
+
+    static LinkNode findLink(List<LinkNode> list, Predicate<LinkNode> condition){
+        for (LinkNode i : list) {
+            if (condition.test(i)){
+                return i;
+            }
+        }
+        return null;
     }
 }

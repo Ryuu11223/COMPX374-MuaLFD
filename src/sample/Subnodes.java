@@ -7,15 +7,15 @@ import org.w3c.dom.NodeList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Subnodes {
+public class Subnodes{
+
     public static class Image extends DataNode{
+
         public Image(NamedNodeMap nm) {
             super(nm);
         }
 
-        public Image() {
-
-        }
+        public Image() {}
 
         @Override
         public String toString() {
@@ -153,12 +153,12 @@ public class Subnodes {
                 }
             }
         }
+
+
     }
 
     public static class Link extends LinkNode{
-        public Link() {
-
-        }
+        public Link() {}
 
         public Link(NamedNodeMap attributes, java.util.List<DataNode> nodeList) {
             for (int i = 0; i < attributes.getLength(); i++) {

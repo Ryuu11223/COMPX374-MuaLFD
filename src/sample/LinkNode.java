@@ -5,6 +5,7 @@ import java.util.*;
 public abstract class LinkNode {
 
     private DataNode _node;
+    private LinkNode _link;
     private final java.util.List<LinkNode> _children = new ArrayList<>();
     private final Map<String,String> _attr = new HashMap<>();
 
@@ -35,6 +36,14 @@ public abstract class LinkNode {
     public String get(String key)
     {
         return _attr.get(key);
+    }
+
+    public LinkNode getLink() {
+        return _link;
+    }
+
+    public void setLink(LinkNode link) {
+        this._link = link;
     }
 
     public Map<String, String> getDict() {
