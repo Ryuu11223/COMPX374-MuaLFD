@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DataNode {
-    private final Map<String,String> _attr = new HashMap<>();
+    private Map<String,String> _attr = new HashMap<>();
 
     public DataNode(NamedNodeMap nm) {
         for (int i = 0; i < nm.getLength(); i++) {
@@ -19,9 +19,7 @@ public class DataNode {
 
     public void set(String key, String value)
     {
-        if (_attr.containsKey(key)){
-            _attr.put(key, value);
-        }
+        _attr.put(key, value);
     }
     public String get(String key) {
         return _attr.get(key);

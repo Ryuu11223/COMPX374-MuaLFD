@@ -15,7 +15,8 @@ public class Subnodes{
             super(nm);
         }
 
-        public Image() {}
+        public Image() {
+        }
 
         @Override
         public String toString() {
@@ -68,6 +69,11 @@ public class Subnodes{
         public Map(NamedNodeMap nm) {
             super(nm);
         }
+
+        public Map() {
+
+        }
+
         @Override
         public String toString() {
             return "map".toString();
@@ -78,6 +84,11 @@ public class Subnodes{
         public PDF(NamedNodeMap nm) {
             super(nm);
         }
+
+        public PDF() {
+
+        }
+
         @Override
         public String toString() {
             return "pdf".toString();
@@ -88,6 +99,11 @@ public class Subnodes{
         public Video(NamedNodeMap nm) {
             super(nm);
         }
+
+        public Video() {
+
+        }
+
         @Override
         public String toString() {
             return "video".toString();
@@ -98,6 +114,11 @@ public class Subnodes{
         public Audio(NamedNodeMap nm) {
             super(nm);
         }
+
+        public Audio() {
+
+        }
+
         @Override
         public String toString() {
             return "audio".toString();
@@ -108,6 +129,11 @@ public class Subnodes{
         public Presentation(NamedNodeMap nm) {
             super(nm);
         }
+
+        public Presentation() {
+
+        }
+
         @Override
         public String toString() {
             return "presentation".toString();
@@ -118,6 +144,11 @@ public class Subnodes{
         public SortedList(NamedNodeMap nm) {
             super(nm);
         }
+
+        public SortedList() {
+
+        }
+
         @Override
         public String toString() {
             return "SortedList".toString();
@@ -128,6 +159,11 @@ public class Subnodes{
         public List(NamedNodeMap nm) {
             super(nm);
         }
+
+        public List() {
+
+        }
+
         @Override
         public String toString() {
             return "list".toString();
@@ -155,6 +191,8 @@ public class Subnodes{
         }
 
 
+        public Collection() {
+        }
     }
 
     public static class Link extends LinkNode{

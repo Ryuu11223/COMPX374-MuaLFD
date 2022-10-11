@@ -389,31 +389,55 @@ public class Main extends Application {
         return false;
     }
 
-    static boolean addChild(TreeItem<LinkNode> item) {
+    static void findPos(TreeItem<LinkNode> item, DataNode type) {
         for (LinkNode n : collectionNodes) {
             if (n.get_node().equals(item.getValue().get_node())) {
                 System.out.println("parent");
-                addElem(n);
-                return true;
+                addElem(n, item, type);
+                return;
             }
         }
         for (LinkNode k : tiles.getChildren()) {
             if (k.get_node().equals(item.getValue().get_node())) {
                 System.out.println("child");
-                addElem(k);
-                return true;
+                addElem(k, item, type);
+                return;
             }
         }
-        return false;
     }
 
-    static void addElem(LinkNode node){
-        DataNode temp = new Subnodes.Image();
-        temp.set("id", "44");
-        dataNodes.add(temp);
+    static void addElem(LinkNode node, TreeItem<LinkNode> item, DataNode type){
+        ArrayList<String> claus = new ArrayList<>(Arrays.asList("img", "pdf", "video", "audio"));
+        if (claus.contains(item.getValue().get_node().toString())) {
+            popup("You cannot add to this Node", Alert.AlertType.WARNING, "Warning!");
+            return;
+        }
+        dataNodes.add(type);
+        setID(type);
         LinkNode link = new Subnodes.Link();
-        link.set_node(temp);
+        link.set_node(type);
+        link.set("ref", type.get("id"));
         node.getChildren().add(link);
+        item.getChildren().add(new TreeItem<LinkNode>(link));
+        if (!claus.contains(type.toString())) {
+            LinkNode temp = new Subnodes.Collection();
+            temp.set("ref", type.get("id"));
+            temp.set_node(type);
+            collectionNodes.add(temp);
+        }
+    }
+
+    static void setID(DataNode node) {
+        int i = 3;
+        while (true) {
+            i++;
+            if (!(refCount.containsKey(String.valueOf(i)))) {
+                refCount.put(String.valueOf(i), 1);
+                node.set("id", String.valueOf(i));
+                System.out.println(node.get("id"));
+                return;
+            }
+        }
     }
 
     static LinkNode findLink(List<LinkNode> list, Predicate<LinkNode> condition){

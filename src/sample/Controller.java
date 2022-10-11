@@ -37,21 +37,29 @@ public class Controller extends Main implements Initializable {
     TableColumn<Map.Entry<String, String>, String> argument;
 
     @FXML
-    void addEvent() {
+    void addImgEvent() { findPos(item, new Subnodes.Image()); }
+    @FXML
+    void addVidEvent() { findPos(item, new Subnodes.Video()); }
+    @FXML
+    void addAudEvent() { findPos(item, new Subnodes.Audio()); }
+    @FXML
+    void addPdfEvent() { findPos(item, new Subnodes.PDF()); }
+    @FXML
+    void addSltEvent() { findPos(item, new Subnodes.SortedList()); }
+    @FXML
+    void addLstEvent() { findPos(item, new Subnodes.List()); }
+    @FXML
+    void addPrzEvent() { findPos(item, new Subnodes.Presentation()); }
+    @FXML
+    void addMapEvent() { findPos(item, new Subnodes.Map()); }
 
-    }
 
     TreeItem<LinkNode> item;
 
     @FXML
-    void addEventC() {
-        if (addChild(item))
-            InitialiseTree(tvFileMenu);
-    }
-
-    @FXML
     void deleteEventHandler() {
         deleteEvent(item);
+        item = null;
     }
 
     @FXML
