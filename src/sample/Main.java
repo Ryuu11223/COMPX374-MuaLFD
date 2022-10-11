@@ -136,12 +136,6 @@ public class Main extends Application {
                 refCount.put(l.get("ref"), count + 1);
             }
         }
-
-        for (String name: refCount.keySet()) {
-            String key = name;
-            String value = refCount.get(name).toString();
-            System.out.println(key + " : " + value);
-        }
     }
 
     public static void InitialiseTree(TreeView<LinkNode> tree){
@@ -229,11 +223,14 @@ public class Main extends Application {
     }
 
     static void updateDataNodes(DataNode node){
+        System.out.println( node.get("id")+ "is referenced" + refCount.get(node.get("id")));
         int count = refCount.get(node.get("id"));
         refCount.put(node.get("id"), count - 1);
         if (count == 1){
+            refCount.remove(node.get("id"));
             dataNodes.remove(node);
         }
+        System.out.println( node.get("id")+ "is referenced" + refCount.get(node.get("id")));
     }
 
     public void exportFile() {
@@ -361,13 +358,13 @@ public class Main extends Application {
         }
     }
 
-    static boolean propertyChange(String key, String value, TreeItem<LinkNode> item) {
+    static void propertyChange(String key, String value, TreeItem<LinkNode> item) {
         if (key.equals("id"))
             for (DataNode d: dataNodes) {
                 if (d.get("id") != null)
                     if (d.get("id").equals(value) || value.equals("1")) {
-                        popup("This id Already exists", Alert.AlertType.CONFIRMATION, "Warning!");
-                        return true;
+                        popup("This id Already exists", Alert.AlertType.WARNING, "Warning!");
+                        return;
                     }
             }
 
@@ -386,7 +383,6 @@ public class Main extends Application {
                 }
             }
         }
-        return false;
     }
 
     static void findPos(TreeItem<LinkNode> item, DataNode type) {

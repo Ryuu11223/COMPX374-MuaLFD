@@ -18,8 +18,7 @@ public class Controller extends Main implements Initializable {
             public void handle(TableColumn.CellEditEvent<Map.Entry<String, String>, String> event) {
                 String key = event.getRowValue().getKey(), value = event.getNewValue();
 
-                if (propertyChange(key, value, item))
-                    selectItem();
+                propertyChange(key, value, item);
             }
         });
     }
