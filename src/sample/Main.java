@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.w3c.dom.*;
@@ -37,8 +39,28 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    static TreeItem<LinkNode> item;
+    static TableColumn<Map.Entry<String, String>, String> property;
+    static TableColumn<Map.Entry<String, String>, String> argument;
+    static TableColumn<Map.Entry<String, String>, Void> buttonColumn;
+    static TableView<Map.Entry<String, String>> tblvProperties;
+    public void setItem(TreeItem<LinkNode> item) {
+        Main.item = item;
+    }
+    public void setProperty(TableColumn<Map.Entry<String, String>, String> property) {
+        Main.property = property;
+    }
+    public void setArgument(TableColumn<Map.Entry<String, String>, String> argument) {
+        Main.argument = argument;
+    }
+    public void setButtonColumn(TableColumn<Map.Entry<String, String>, Void> buttonColumn) {
+        Main.buttonColumn = buttonColumn;
+    }
+    public void setTblvProperties(TableView<Map.Entry<String, String>> tblvProperties) {
+        Main.tblvProperties = tblvProperties;
+    }
+
     File file;
-    //Creates list for nodes for data objects
     static List<DataNode> dataNodes;
     static List<LinkNode> collectionNodes;
     static LinkNode tiles;
@@ -50,38 +72,8 @@ public class Main extends Application {
         launch(args);
     }
 
-    void loadData() throws IOException{
-        //Initialise
-        dataNodes = new ArrayList<>();
-        collectionNodes = new ArrayList<>();
-
-        //Gets XML file
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
-        file = fileChooser.showOpenDialog(null);
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-
-        try{
-            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
-            Document d = documentBuilder.parse(file);
-
-            //sets root element
-            Element root = d.getDocumentElement();
-            //sets link elements
-            Node collectionOfLinks = root.getElementsByTagName("links").item(0);
-            //sets data node elements
-            Node nodes = root.getElementsByTagName("nodes").item(0);
-            //Converts XML data nodes into objects
-            PopulateNodes(nodes);
-            PopulateLinks(collectionOfLinks);
-
-        }
-        catch (Exception ex){
-            System.out.println(ex.toString());
-        }
-    }
-
-    public static void PopulateNodes(Node node){
+    //// INITIALISE ////
+    static void PopulateNodes(Node node){
         //Initialise
         NamedNodeMap nm;
         DataNode temp = null;
@@ -116,7 +108,7 @@ public class Main extends Application {
         }
     }
 
-    public static void PopulateLinks(Node collection){
+    static void PopulateLinks(Node collection){
         NodeList sel = collection.getChildNodes();
         LinkNode temp;
         refCount = new HashMap<>();
@@ -139,30 +131,43 @@ public class Main extends Application {
         }
     }
 
-    public static void InitialiseTree(TreeView<LinkNode> tree){
-        //Initialise tree and root method
-        tree.setRoot(new TreeItem<LinkNode>((Objects.requireNonNull(findLink(collectionNodes, i -> i.getDict().containsKey("id") && i.get("id").equals("1")))).getChildren().get(0)));
-        InitialiseBranches(tree.getRoot());
-    }
+    void loadData() throws IOException{
+        //Initialise
+        dataNodes = new ArrayList<>();
+        collectionNodes = new ArrayList<>();
 
-    public static void InitialiseBranches(TreeItem<LinkNode> treeItem){
-        //Initialise branches of the branch that is passed into method
-        TreeItem<LinkNode> temp;
-        for (LinkNode c :collectionNodes) {
-            if (c.get("ref").equals(treeItem.getValue().get("ref"))){
-                for ( LinkNode l :c.getChildren()) {
-                    temp = new TreeItem<LinkNode>(l);
-                    treeItem.getChildren().add(temp);
-                    InitialiseBranches(temp);
-                }
-            }
+        //Gets XML file
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
+        file = fileChooser.showOpenDialog(null);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+        try{
+            DocumentBuilder documentBuilder = dbf.newDocumentBuilder();
+            Document d = documentBuilder.parse(file);
+
+            //sets root element
+            Element root = d.getDocumentElement();
+            //sets link elements
+            Node collectionOfLinks = root.getElementsByTagName("links").item(0);
+            //sets data node elements
+            Node nodes = root.getElementsByTagName("nodes").item(0);
+            //Converts XML data nodes into objects
+            PopulateNodes(nodes);
+            PopulateLinks(collectionOfLinks);
+
+        }
+        catch (Exception ex){
+            System.out.println(ex.toString());
         }
     }
 
-    public static void InitialiseProperties(LinkNode item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument, TableColumn<Map.Entry<String, String>, Void> buttonColumn, TableView<Map.Entry<String, String>> tblvProperties){
+
+    //// TABLE MANIPULATION ////
+    static void InitialiseProperties(TreeItem<LinkNode> item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument, TableColumn<Map.Entry<String, String>, Void> buttonColumn, TableView<Map.Entry<String, String>> tblvProperties){
 
         //Gets attribute map
-        Map<String,String> map = item.get_node().getDict();
+        Map<String,String> map = item.getValue().get_node().getDict();
 
         //Overwrite get method to extract from Map
         property.setId("Key");
@@ -186,13 +191,17 @@ public class Main extends Application {
         //Adds Buttons to last column
         buttonColumn.setCellFactory(new Callback<TableColumn<Map.Entry<String, String>, Void>, TableCell<Map.Entry<String, String>, Void>>() {
             @Override
-            public TableCell<Map.Entry<String, String>, Void> call(TableColumn<Map.Entry<String, String>, Void> entryButtonTableColumn) {
+            public TableCell<Map.Entry<String, String>, Void> call(TableColumn<Map.Entry<String, String>, Void> entryTableColumn) {
                 return new TableCell<Map.Entry<String, String>, Void>() {
-                    private final Button btn = new Button();
+                    private final Button btn = new Button("...");
 
                     {
                         btn.setOnAction((ActionEvent event) -> {
-                            System.out.println("hell yea");
+                            try {
+                                expandArgument(this.getTableRow().getItem().getKey(),this.getTableRow().getItem().getValue(),item);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         });
                     }
 
@@ -219,12 +228,96 @@ public class Main extends Application {
         argument.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
-    //Popup method
-    static Optional<ButtonType> popup(String info, Alert.AlertType type, String title) {
-        Alert a = new Alert(type);
-        a.setTitle(title);
-        a.setHeaderText(info);
-        return a.showAndWait();
+    static void propertyChange(String key, String value, TreeItem<LinkNode> item) {
+        if (key.equals("id"))
+            try {
+                Integer.parseInt(value);
+                for (DataNode d: dataNodes) {
+                    if (d.get("id") != null)
+                        if (d.get("id").equals(value) || value.equals("1")) {
+                            popup("This id Already exists", Alert.AlertType.WARNING, "Warning!");
+                            return;
+                        }
+                }
+            }
+            catch (Exception ex){
+                popup("This id value can only be an integer", Alert.AlertType.WARNING, "Warning!");
+                return;
+            }
+
+        for (LinkNode n : collectionNodes) {
+            for (LinkNode k: n.getChildren()) {
+                if (k.get_node().equals(item.getValue().get_node())) {
+                    for (LinkNode i: collectionNodes) {
+                        if(i.get("ref").equals(k.get("ref"))) {
+                            i.set("ref", value);
+                        }
+                    }
+                    k.get_node().set(key, value);
+                    if (key.equals("id")) {
+                        k.set("ref" , value);
+                    }
+                }
+            }
+        }
+    }
+
+    static void expandArgument(String key, String value, TreeItem<LinkNode> item) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("editor.fxml"));
+        Parent root = loader.load();
+
+        EditorController editorController = loader.getController();
+        editorController.setItem(item);
+        editorController.setKey(key);
+        editorController.setValue(value);
+
+        Stage stage = new Stage();
+        stage.setTitle(key);
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+        refreshTable();
+    }
+
+    //// TREE MANIPULATION ////
+    static void InitialiseTree(TreeView<LinkNode> tree){
+        //Initialise tree and root method
+        tree.setRoot(new TreeItem<LinkNode>((Objects.requireNonNull(findLink(collectionNodes, i -> i.getDict().containsKey("id") && i.get("id").equals("1")))).getChildren().get(0)));
+        InitialiseBranches(tree.getRoot());
+    }
+
+    static void InitialiseBranches(TreeItem<LinkNode> treeItem){
+        //Initialise branches of the branch that is passed into method
+        TreeItem<LinkNode> temp;
+        for (LinkNode c :collectionNodes) {
+            if (c.get("ref").equals(treeItem.getValue().get("ref"))){
+                for ( LinkNode l :c.getChildren()) {
+                    temp = new TreeItem<LinkNode>(l);
+                    treeItem.getChildren().add(temp);
+                    InitialiseBranches(temp);
+                }
+            }
+        }
+    }
+    static void addElem(LinkNode node, TreeItem<LinkNode> item, DataNode type){
+        ArrayList<String> claus = new ArrayList<>(Arrays.asList("img", "pdf", "video", "audio"));
+        if (claus.contains(item.getValue().get_node().toString())) {
+            popup("You cannot add to this Node", Alert.AlertType.WARNING, "Warning!");
+            return;
+        }
+        dataNodes.add(type);
+        setID(type);
+        LinkNode link = new Subnodes.Link();
+        link.set_node(type);
+        link.set("ref", type.get("id"));
+        node.getChildren().add(link);
+        item.getChildren().add(new TreeItem<LinkNode>(link));
+        if (!claus.contains(type.toString())) {
+            LinkNode temp = new Subnodes.Collection();
+            temp.set("ref", type.get("id"));
+            temp.set_node(type);
+            collectionNodes.add(temp);
+        }
     }
 
     public void deleteEvent(TreeItem<LinkNode> item){
@@ -250,6 +343,33 @@ public class Main extends Application {
         }
     }
 
+
+    //// QUALITY OF LIFE METHODS ////
+    static void findPos(TreeItem<LinkNode> item, DataNode type) {
+        for (LinkNode n : collectionNodes) {
+            if (n.get_node().equals(item.getValue().get_node())) {
+                System.out.println("parent");
+                addElem(n, item, type);
+                return;
+            }
+        }
+        for (LinkNode k : tiles.getChildren()) {
+            if (k.get_node().equals(item.getValue().get_node())) {
+                System.out.println("child");
+                addElem(k, item, type);
+                return;
+            }
+        }
+    }
+    static LinkNode findLink(List<LinkNode> list, Predicate<LinkNode> condition){
+        for (LinkNode i : list) {
+            if (condition.test(i)){
+                return i;
+            }
+        }
+        return null;
+    }
+
     static void updateDataNodes(DataNode node){
         System.out.println( node.get("id")+ "is referenced" + refCount.get(node.get("id")));
         int count = refCount.get(node.get("id"));
@@ -261,6 +381,33 @@ public class Main extends Application {
         System.out.println( node.get("id")+ "is referenced" + refCount.get(node.get("id")));
     }
 
+    static void setID(DataNode node) {
+        int i = 3;
+        while (true) {
+            i++;
+            if (!(refCount.containsKey(String.valueOf(i)))) {
+                refCount.put(String.valueOf(i), 1);
+                node.set("id", String.valueOf(i));
+                System.out.println(node.get("id"));
+                return;
+            }
+        }
+    }
+
+    public static void refreshTable(){
+        InitialiseProperties(item,property,argument,buttonColumn,tblvProperties);
+    }
+
+    //Popup method
+    static Optional<ButtonType> popup(String info, Alert.AlertType type, String title) {
+        Alert a = new Alert(type);
+        a.setTitle(title);
+        a.setHeaderText(info);
+        return a.showAndWait();
+    }
+
+
+    //// EXPORT SECTION ////
     public void exportFile() {
         if (file == null) {
             popup("No XML has been loaded to export!", Alert.AlertType.WARNING, "Warning!");
@@ -384,92 +531,5 @@ public class Main extends Application {
                 } );
             }
         }
-    }
-
-    static void propertyChange(String key, String value, TreeItem<LinkNode> item) {
-        if (key.equals("id"))
-            for (DataNode d: dataNodes) {
-                if (d.get("id") != null)
-                    if (d.get("id").equals(value) || value.equals("1")) {
-                        popup("This id Already exists", Alert.AlertType.WARNING, "Warning!");
-                        return;
-                    }
-            }
-
-        for (LinkNode n : collectionNodes) {
-            for (LinkNode k: n.getChildren()) {
-                if (k.get_node().equals(item.getValue().get_node())) {
-                    for (LinkNode i: collectionNodes) {
-                        if(i.get("ref").equals(k.get("ref"))) {
-                            i.set("ref", value);
-                        }
-                    }
-                    k.get_node().set(key, value);
-                    if (key.equals("id")) {
-                        k.set("ref" , value);
-                    }
-                }
-            }
-        }
-    }
-
-    static void findPos(TreeItem<LinkNode> item, DataNode type) {
-        for (LinkNode n : collectionNodes) {
-            if (n.get_node().equals(item.getValue().get_node())) {
-                System.out.println("parent");
-                addElem(n, item, type);
-                return;
-            }
-        }
-        for (LinkNode k : tiles.getChildren()) {
-            if (k.get_node().equals(item.getValue().get_node())) {
-                System.out.println("child");
-                addElem(k, item, type);
-                return;
-            }
-        }
-    }
-
-    static void addElem(LinkNode node, TreeItem<LinkNode> item, DataNode type){
-        ArrayList<String> claus = new ArrayList<>(Arrays.asList("img", "pdf", "video", "audio"));
-        if (claus.contains(item.getValue().get_node().toString())) {
-            popup("You cannot add to this Node", Alert.AlertType.WARNING, "Warning!");
-            return;
-        }
-        dataNodes.add(type);
-        setID(type);
-        LinkNode link = new Subnodes.Link();
-        link.set_node(type);
-        link.set("ref", type.get("id"));
-        node.getChildren().add(link);
-        item.getChildren().add(new TreeItem<LinkNode>(link));
-        if (!claus.contains(type.toString())) {
-            LinkNode temp = new Subnodes.Collection();
-            temp.set("ref", type.get("id"));
-            temp.set_node(type);
-            collectionNodes.add(temp);
-        }
-    }
-
-    static void setID(DataNode node) {
-        int i = 3;
-        while (true) {
-            i++;
-            if (!(refCount.containsKey(String.valueOf(i)))) {
-                refCount.put(String.valueOf(i), 1);
-                node.set("id", String.valueOf(i));
-                System.out.println(node.get("id"));
-                return;
-            }
-        }
-    }
-
-    static LinkNode findLink(List<LinkNode> list, Predicate<LinkNode> condition){
-        for (LinkNode i : list) {
-            if (condition.test(i)){
-                return i;
-            }
-        }
-        return null;
     }
 }

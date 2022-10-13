@@ -10,7 +10,6 @@ import java.net.*;
 import java.util.*;
 
 public class Controller extends Main implements Initializable {
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         argument.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Map.Entry<String, String>, String>>() {
@@ -18,6 +17,7 @@ public class Controller extends Main implements Initializable {
             public void handle(TableColumn.CellEditEvent<Map.Entry<String, String>, String> event) {
                 String key = event.getRowValue().getKey(), value = event.getNewValue();
                 propertyChange(key, value, item);
+                refreshTable();
             }
         });
     }
@@ -74,11 +74,15 @@ public class Controller extends Main implements Initializable {
     }
 
     @FXML
-    private void selectItem() {
+    public void selectItem() {
         if (tvFileMenu.getSelectionModel().getSelectedItem() != item){
-            LinkNode selectedItem = tvFileMenu.getSelectionModel().getSelectedItem().getValue();
             item = tvFileMenu.getSelectionModel().getSelectedItem();
-            InitialiseProperties(selectedItem,property,argument,buttonColumn,tblvProperties);
+            setItem(item);
+            setProperty(property);
+            setArgument(argument);
+            setButtonColumn(buttonColumn);
+            setTblvProperties(tblvProperties);
+            refreshTable();
         }
     }
 }
