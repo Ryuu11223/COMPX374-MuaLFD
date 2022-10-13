@@ -5,13 +5,19 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.web.WebView;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -25,7 +31,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -33,17 +42,20 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("sample.fxml")));
         primaryStage.setTitle("Backend Management System");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
-
+    //// GLOBAL VARIABLE
+    static  Media previewMedia;
     static TreeItem<LinkNode> item;
     static TableColumn<Map.Entry<String, String>, String> property;
     static TableColumn<Map.Entry<String, String>, String> argument;
     static TableColumn<Map.Entry<String, String>, Void> buttonColumn;
     static TableView<Map.Entry<String, String>> tblvProperties;
+
+    //// SETTERS ////
     public void setItem(TreeItem<LinkNode> item) {
         Main.item = item;
     }
@@ -61,6 +73,7 @@ public class Main extends Application {
     }
 
     File file;
+    static File directory;
     static List<DataNode> dataNodes;
     static List<LinkNode> collectionNodes;
     static LinkNode tiles;
@@ -160,6 +173,14 @@ public class Main extends Application {
         catch (Exception ex){
             System.out.println(ex.toString());
         }
+    }
+
+    void setDirectory() throws IOException{
+        //Gets Set Directory
+        DirectoryChooser fileChooser = new DirectoryChooser();
+        directory = fileChooser.showDialog(null);
+        WebView webView = new WebView();
+        webView.getEngine().load("https://www.google.com/maps");
     }
 
 
@@ -404,6 +425,34 @@ public class Main extends Application {
         a.setTitle(title);
         a.setHeaderText(info);
         return a.showAndWait();
+    }
+
+    static  void preview(TreeItem<LinkNode> item, MediaView mediaView, ImageView imageView) throws IOException {
+        String type;
+        File previewFile;
+
+        if (mediaView.getMediaPlayer() != null){
+            mediaView.getMediaPlayer().dispose();
+        }
+        mediaView = null;
+        imageView.setImage(null);
+
+        if (item.getValue().get_node().getDict().containsKey("media")){
+            previewFile = new File(directory.getAbsoluteFile()+"\\StreamingAssets\\"+item.getValue().get_node().get("media"));
+            type = Files.probeContentType(Path.of(previewFile.getPath())).split("/")[0];
+
+            if (type.equals("image")){
+                imageView.setImage(new Image(previewFile.getAbsolutePath()));
+            } else if (type.equals("video")) {
+                previewMedia = new Media(previewFile.toURI().toString());
+                MediaPlayer mediaPlayer = new MediaPlayer(previewMedia);
+                assert false;
+                mediaView.setMediaPlayer(mediaPlayer);
+                mediaPlayer.play();
+            }
+
+        }
+
     }
 
 

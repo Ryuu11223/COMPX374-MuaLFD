@@ -3,13 +3,28 @@ package sample;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 public class Controller extends Main implements Initializable {
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         argument.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Map.Entry<String, String>, String>>() {
@@ -22,6 +37,14 @@ public class Controller extends Main implements Initializable {
         });
     }
 
+    @FXML
+    public MediaView mediaView;
+
+    @FXML
+    public ImageView imageView;
+
+    @FXML
+    public AnchorPane previewHolder;
 
     @FXML
     private TreeView<LinkNode> tvFileMenu;
@@ -74,7 +97,12 @@ public class Controller extends Main implements Initializable {
     }
 
     @FXML
-    public void selectItem() {
+    void setDirectoryHandler() throws IOException {
+        setDirectory();
+    }
+
+    @FXML
+    public void selectItem() throws IOException {
         if (tvFileMenu.getSelectionModel().getSelectedItem() != item){
             item = tvFileMenu.getSelectionModel().getSelectedItem();
             setItem(item);
@@ -83,6 +111,7 @@ public class Controller extends Main implements Initializable {
             setButtonColumn(buttonColumn);
             setTblvProperties(tblvProperties);
             refreshTable();
+            preview(item,mediaView,imageView);
         }
     }
 }
