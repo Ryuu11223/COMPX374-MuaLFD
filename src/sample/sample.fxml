@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <center>
       <SplitPane dividerPositions="0.374749498997996" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
@@ -25,8 +25,8 @@
                   </AnchorPane>
                 <AnchorPane>
                      <children>
-                        <Button fx:id="btnDelete" layoutX="229.0" layoutY="19.0" mnemonicParsing="false" onAction="#deleteEventHandler" text="Delete" />
-                        <MenuButton fx:id="btnAddNode" layoutX="24.0" layoutY="19.0" mnemonicParsing="false" text="Add Node">
+                        <Button fx:id="btnDelete" layoutX="381.0" layoutY="17.0" mnemonicParsing="false" onAction="#deleteEventHandler" text="Delete" />
+                        <MenuButton fx:id="btnAddNode" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" text="Add Node">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#addImgEvent" text="Image" />
                             <MenuItem mnemonicParsing="false" onAction="#addVidEvent" text="Video" />
@@ -38,12 +38,15 @@
                               <MenuItem mnemonicParsing="false" onAction="#addMapEvent" text="Map" />
                           </items>
                         </MenuButton>
+                        <Button fx:id="buttonUp" layoutX="124.0" layoutY="17.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="51.0" text="Up" />
+                        <Button fx:id="buttonDown" layoutX="183.0" layoutY="17.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Down" />
                      </children>
                   </AnchorPane>
                   <TableView fx:id="tblvProperties" prefHeight="200.0" prefWidth="200.0">
                     <columns>
-                      <TableColumn fx:id="property" prefWidth="110.0" text="Property" />
-                      <TableColumn fx:id="argument" prefWidth="261.0" text="Arguments" />
+                      <TableColumn fx:id="property" prefWidth="122.0" text="Property" />
+                      <TableColumn fx:id="argument" minWidth="-1.0" prefWidth="245.0" text="Arguments" />
+                        <TableColumn fx:id="buttonColumn" prefWidth="79.0" />
                     </columns>
                   </TableView>
               </items>

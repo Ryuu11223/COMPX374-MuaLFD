@@ -17,7 +17,6 @@ public class Controller extends Main implements Initializable {
             @Override
             public void handle(TableColumn.CellEditEvent<Map.Entry<String, String>, String> event) {
                 String key = event.getRowValue().getKey(), value = event.getNewValue();
-
                 propertyChange(key, value, item);
             }
         });
@@ -31,9 +30,10 @@ public class Controller extends Main implements Initializable {
     private TableView<Map.Entry<String, String>> tblvProperties;
 
     @FXML
-    private TableColumn<Map.Entry<String, String>, String> property;
+    private TableColumn<Map.Entry<String, String>, String> property, argument;
+
     @FXML
-    TableColumn<Map.Entry<String, String>, String> argument;
+    private TableColumn<Map.Entry<String, String>, Void> buttonColumn;
 
     @FXML
     void addImgEvent() { findPos(item, new Subnodes.Image()); }
@@ -78,7 +78,7 @@ public class Controller extends Main implements Initializable {
         if (tvFileMenu.getSelectionModel().getSelectedItem() != item){
             LinkNode selectedItem = tvFileMenu.getSelectionModel().getSelectedItem().getValue();
             item = tvFileMenu.getSelectionModel().getSelectedItem();
-            InitialiseProperties(selectedItem,property,argument,tblvProperties);
+            InitialiseProperties(selectedItem,property,argument,buttonColumn,tblvProperties);
         }
     }
 }

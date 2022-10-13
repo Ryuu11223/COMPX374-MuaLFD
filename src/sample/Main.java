@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -158,7 +159,7 @@ public class Main extends Application {
         }
     }
 
-    public static void InitialiseProperties(LinkNode item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument,TableView<Map.Entry<String, String>> tblvProperties){
+    public static void InitialiseProperties(LinkNode item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument, TableColumn<Map.Entry<String, String>, Void> buttonColumn, TableView<Map.Entry<String, String>> tblvProperties){
 
         //Gets attribute map
         Map<String,String> map = item.get_node().getDict();
@@ -181,6 +182,33 @@ public class Main extends Application {
                 return new SimpleStringProperty(p.getValue().getValue());
             }
         });
+
+        //Adds Buttons to last column
+        buttonColumn.setCellFactory(new Callback<TableColumn<Map.Entry<String, String>, Void>, TableCell<Map.Entry<String, String>, Void>>() {
+            @Override
+            public TableCell<Map.Entry<String, String>, Void> call(TableColumn<Map.Entry<String, String>, Void> entryButtonTableColumn) {
+                return new TableCell<Map.Entry<String, String>, Void>() {
+                    private final Button btn = new Button();
+
+                    {
+                        btn.setOnAction((ActionEvent event) -> {
+                            System.out.println("hell yea");
+                        });
+                    }
+
+                    @Override
+                    public void updateItem(Void item1, boolean empty) {
+                        super.updateItem(item1, empty);
+                        if (empty) {
+                            setGraphic(null);
+                        } else {
+                            setGraphic(btn);
+                        }
+                    }
+                };
+            }
+        });
+
 
         //Sets all items of node into table view
         ObservableList<Map.Entry<String, String>> items = FXCollections.observableArrayList(map.entrySet());
