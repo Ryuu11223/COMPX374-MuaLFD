@@ -17,10 +17,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.web.WebView;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.stage.*;
 import javafx.util.Callback;
 import org.w3c.dom.*;
 
@@ -152,6 +149,7 @@ public class Main extends Application {
         //Gets XML file
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML files (*.xml)", "*.xml"));
+        fileChooser.setInitialDirectory(directory);
         file = fileChooser.showOpenDialog(null);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
@@ -179,8 +177,6 @@ public class Main extends Application {
         //Gets Set Directory
         DirectoryChooser fileChooser = new DirectoryChooser();
         directory = fileChooser.showDialog(null);
-        WebView webView = new WebView();
-        webView.getEngine().load("https://www.google.com/maps");
     }
 
 
@@ -364,19 +360,41 @@ public class Main extends Application {
         }
     }
 
+    public void moveTreeItem(TreeItem<LinkNode> item, String action){
+        try {
+            List<LinkNode> parentList = Objects.requireNonNull(findLink(collectionNodes, l -> l.get("ref").equals(item.getParent().getValue().get("ref")))).getChildren();
+            LinkNode selectedItem = findLink(parentList,l -> l.get("ref").equals(item.getValue().get("ref")));
+            int j = parentList.indexOf(selectedItem);
+
+            if (action.equals("up") && !(j == 0)){
+                Collections.swap(parentList, j, j - 1);
+                Collections.swap(item.getParent().getChildren(), j, j - 1);
+            }
+            else if(action.equals("down") && !(j == parentList.size())){
+                Collections.swap(parentList, j, j + 1);
+                Collections.swap(item.getParent().getChildren(), j, j + 1);
+            }
+            else {
+                popup("Item cannot move any further", Alert.AlertType.ERROR,"ERROR");
+            }
+
+        }
+        catch (Exception ex){
+            System.out.println(ex.toString());
+        }
+    }
+
 
     //// QUALITY OF LIFE METHODS ////
     static void findPos(TreeItem<LinkNode> item, DataNode type) {
         for (LinkNode n : collectionNodes) {
             if (n.get_node().equals(item.getValue().get_node())) {
-                System.out.println("parent");
                 addElem(n, item, type);
                 return;
             }
         }
         for (LinkNode k : tiles.getChildren()) {
             if (k.get_node().equals(item.getValue().get_node())) {
-                System.out.println("child");
                 addElem(k, item, type);
                 return;
             }
@@ -392,14 +410,12 @@ public class Main extends Application {
     }
 
     static void updateDataNodes(DataNode node){
-        System.out.println( node.get("id")+ "is referenced" + refCount.get(node.get("id")));
         int count = refCount.get(node.get("id"));
         refCount.put(node.get("id"), count - 1);
         if (count == 1){
             refCount.remove(node.get("id"));
             dataNodes.remove(node);
         }
-        System.out.println( node.get("id")+ "is referenced" + refCount.get(node.get("id")));
     }
 
     static void setID(DataNode node) {
@@ -434,11 +450,12 @@ public class Main extends Application {
         if (mediaView.getMediaPlayer() != null){
             mediaView.getMediaPlayer().dispose();
         }
-        mediaView = null;
+        mediaView.setMediaPlayer(null);
         imageView.setImage(null);
 
         if (item.getValue().get_node().getDict().containsKey("media")){
-            previewFile = new File(directory.getAbsoluteFile()+"\\StreamingAssets\\"+item.getValue().get_node().get("media"));
+
+            previewFile = new File(directory.getAbsoluteFile()+"\\Mua.Unity_Data\\StreamingAssets\\"+item.getValue().get_node().get("media"));
             type = Files.probeContentType(Path.of(previewFile.getPath())).split("/")[0];
 
             if (type.equals("image")){
@@ -478,6 +495,7 @@ public class Main extends Application {
             DOMSource source = new DOMSource(document);
 
             FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialDirectory(directory);
             fileChooser.setTitle("Save");
             fileChooser.setInitialFileName("DemoRoot.xml");
 
@@ -558,7 +576,6 @@ public class Main extends Application {
     }
 
     static void addNodes(Document doc, Element element){
-        String key, value;
         for (DataNode x : dataNodes) {
             Element elem = quickAddNode(doc, element, x.toString());
             x.getDict().forEach((i, k) -> {

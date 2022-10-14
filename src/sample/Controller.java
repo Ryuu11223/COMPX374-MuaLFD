@@ -9,14 +9,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
@@ -82,6 +75,16 @@ public class Controller extends Main implements Initializable {
     void deleteEventHandler() {
         deleteEvent(item);
         item = null;
+    }
+
+    @FXML
+    void upEventHandler(){
+        moveTreeItem(item, "up");
+    }
+
+    @FXML
+    void downEventHandler(){
+        moveTreeItem(item, "down");
     }
 
     @FXML
