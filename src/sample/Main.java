@@ -16,7 +16,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.web.WebView;
 import javafx.stage.*;
 import javafx.util.Callback;
 import org.w3c.dom.*;
@@ -181,10 +180,10 @@ public class Main extends Application {
 
 
     //// TABLE MANIPULATION ////
-    static void InitialiseProperties(TreeItem<LinkNode> item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument, TableColumn<Map.Entry<String, String>, Void> buttonColumn, TableView<Map.Entry<String, String>> tblvProperties){
+    static void InitialiseProperties(LinkNode item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument, TableColumn<Map.Entry<String, String>, Void> buttonColumn, TableView<Map.Entry<String, String>> tblvProperties){
 
         //Gets attribute map
-        Map<String,String> map = item.getValue().get_node().getDict();
+        Map<String,String> map = item.get_node().getDict();
 
         //Overwrite get method to extract from Map
         property.setId("Key");
@@ -245,7 +244,7 @@ public class Main extends Application {
         argument.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
-    static void propertyChange(String key, String value, TreeItem<LinkNode> item) {
+    static void propertyChange(String key, String value, LinkNode item) {
         if (key.equals("id"))
             try {
                 Integer.parseInt(value);
@@ -264,7 +263,7 @@ public class Main extends Application {
 
         for (LinkNode n : collectionNodes) {
             for (LinkNode k: n.getChildren()) {
-                if (k.get_node().equals(item.getValue().get_node())) {
+                if (k.get_node().equals(item.get_node())) {
                     for (LinkNode i: collectionNodes) {
                         if(i.get("ref").equals(k.get("ref"))) {
                             i.set("ref", value);
@@ -279,7 +278,7 @@ public class Main extends Application {
         }
     }
 
-    static void expandArgument(String key, String value, TreeItem<LinkNode> item) throws IOException {
+    static void expandArgument(String key, String value, LinkNode item) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("editor.fxml"));
         Parent root = loader.load();
 
@@ -297,13 +296,13 @@ public class Main extends Application {
     }
 
     //// TREE MANIPULATION ////
-    static void InitialiseTree(TreeView<LinkNode> tree){
+    static void initialiseTree(TreeView<LinkNode> tree){
         //Initialise tree and root method
         tree.setRoot(new TreeItem<LinkNode>((Objects.requireNonNull(findLink(collectionNodes, i -> i.getDict().containsKey("id") && i.get("id").equals("1")))).getChildren().get(0)));
-        InitialiseBranches(tree.getRoot());
+        initialiseBranches(tree.getRoot());
     }
 
-    static void InitialiseBranches(TreeItem<LinkNode> treeItem){
+    static void initialiseBranches(TreeItem<LinkNode> treeItem){
         //Initialise branches of the branch that is passed into method
         TreeItem<LinkNode> temp;
         for (LinkNode c :collectionNodes) {
@@ -311,7 +310,7 @@ public class Main extends Application {
                 for ( LinkNode l :c.getChildren()) {
                     temp = new TreeItem<LinkNode>(l);
                     treeItem.getChildren().add(temp);
-                    InitialiseBranches(temp);
+                    initialiseBranches(temp);
                 }
             }
         }
@@ -432,7 +431,7 @@ public class Main extends Application {
     }
 
     public static void refreshTable(){
-        InitialiseProperties(item,property,argument,buttonColumn,tblvProperties);
+        InitialiseProperties(item.getValue(),property,argument,buttonColumn,tblvProperties);
     }
 
     //Popup method
@@ -443,33 +442,39 @@ public class Main extends Application {
         return a.showAndWait();
     }
 
-    static  void preview(TreeItem<LinkNode> item, MediaView mediaView, ImageView imageView) throws IOException {
-        String type;
-        File previewFile;
+    static  String preview(TreeItem<LinkNode> item, MediaView mediaView, ImageView imageView) throws IOException {
+        try {
+            String type;
+            File previewFile;
 
-        if (mediaView.getMediaPlayer() != null){
-            mediaView.getMediaPlayer().dispose();
-        }
-        mediaView.setMediaPlayer(null);
-        imageView.setImage(null);
-
-        if (item.getValue().get_node().getDict().containsKey("media")){
-
-            previewFile = new File(directory.getAbsoluteFile()+"\\Mua.Unity_Data\\StreamingAssets\\"+item.getValue().get_node().get("media"));
-            type = Files.probeContentType(Path.of(previewFile.getPath())).split("/")[0];
-
-            if (type.equals("image")){
-                imageView.setImage(new Image(previewFile.getAbsolutePath()));
-            } else if (type.equals("video")) {
-                previewMedia = new Media(previewFile.toURI().toString());
-                MediaPlayer mediaPlayer = new MediaPlayer(previewMedia);
-                assert false;
-                mediaView.setMediaPlayer(mediaPlayer);
-                mediaPlayer.play();
+            if (mediaView.getMediaPlayer() != null){
+                mediaView.getMediaPlayer().dispose();
             }
+            mediaView.setMediaPlayer(null);
+            imageView.setImage(null);
 
+            if (item.getValue().get_node().getDict().containsKey("media")){
+
+                previewFile = new File(directory.getAbsoluteFile()+"\\Mua.Unity_Data\\StreamingAssets\\"+item.getValue().get_node().get("media"));
+                type = Files.probeContentType(Path.of(previewFile.getPath())).split("/")[0];
+
+                if (type.equals("image")){
+                    imageView.setImage(new Image(previewFile.getAbsolutePath()));
+                    return null;
+                } else if (type.equals("video")) {
+                    previewMedia = new Media(previewFile.toURI().toString());
+                    MediaPlayer mediaPlayer = new MediaPlayer(previewMedia);
+                    assert false;
+                    mediaView.setMediaPlayer(mediaPlayer);
+                    mediaPlayer.play();
+                    return null;
+                }
+            }
+            return  "Preview unavailable.";
         }
-
+        catch (Exception ex){
+            return "Unable to preview. Please make sure you have set the MUA file directory.";
+        }
     }
 
 

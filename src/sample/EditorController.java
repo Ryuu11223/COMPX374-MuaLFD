@@ -23,7 +23,7 @@ public class EditorController extends Main{
     public Stage stage;
 
     private String key, value;;
-    private TreeItem<LinkNode> item;
+    private LinkNode item;
 
     public void setKey(String key) {
         this.key = key;
@@ -34,7 +34,7 @@ public class EditorController extends Main{
         textArea.setText(value);
     }
 
-    public void setItem(TreeItem<LinkNode> item) {
+    public void setItem(LinkNode item) {
         this.item = item;
     }
 

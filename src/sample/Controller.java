@@ -3,12 +3,8 @@ package sample;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.MediaView;
 import java.io.IOException;
 import java.net.URL;
@@ -20,11 +16,12 @@ public class Controller extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         argument.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Map.Entry<String, String>, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Map.Entry<String, String>, String> event) {
                 String key = event.getRowValue().getKey(), value = event.getNewValue();
-                propertyChange(key, value, item);
+                propertyChange(key, value, item.getValue());
                 refreshTable();
             }
         });
@@ -37,10 +34,11 @@ public class Controller extends Main implements Initializable {
     public ImageView imageView;
 
     @FXML
-    public AnchorPane previewHolder;
+    private TreeView<LinkNode> tvFileMenu;
 
     @FXML
-    private TreeView<LinkNode> tvFileMenu;
+    private Label lblPreviewStatus;
+
 
     @FXML
     private TableView<Map.Entry<String, String>> tblvProperties;
@@ -96,7 +94,7 @@ public class Controller extends Main implements Initializable {
     @FXML
     void loadFile() throws IOException {
         loadData();
-        InitialiseTree(tvFileMenu);
+        initialiseTree(tvFileMenu);
     }
 
     @FXML
@@ -114,7 +112,7 @@ public class Controller extends Main implements Initializable {
             setButtonColumn(buttonColumn);
             setTblvProperties(tblvProperties);
             refreshTable();
-            preview(item,mediaView,imageView);
+            lblPreviewStatus.setText(preview(item,mediaView,imageView));
         }
     }
 }

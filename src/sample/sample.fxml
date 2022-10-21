@@ -17,21 +17,21 @@
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="818.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <center>
       <SplitPane dividerPositions="0.374749498997996" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-            <SplitPane dividerPositions="0.47347994825355755, 0.5614489003880984" orientation="VERTICAL" SplitPane.resizableWithParent="false">
+            <SplitPane dividerPositions="0.5195954487989887, 0.5714285714285714" orientation="VERTICAL" SplitPane.resizableWithParent="false">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <children>
-                        <TreeView fx:id="tvFileMenu" onMouseClicked="#selectItem" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <TreeView fx:id="tvFileMenu" onMouseClicked="#selectItem" prefHeight="411.0" prefWidth="446.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                <AnchorPane>
+                <AnchorPane prefWidth="446.0">
                      <children>
-                        <Button fx:id="btnDelete" layoutX="381.0" layoutY="17.0" mnemonicParsing="false" onAction="#deleteEventHandler" text="Delete" />
-                        <MenuButton fx:id="btnAddNode" layoutX="22.0" layoutY="17.0" mnemonicParsing="false" text="Add Node">
+                        <Button fx:id="btnDelete" layoutX="381.0" layoutY="4.0" mnemonicParsing="false" onAction="#deleteEventHandler" text="Delete" AnchorPane.topAnchor="4.0" />
+                        <MenuButton fx:id="btnAddNode" layoutX="14.0" layoutY="5.0" mnemonicParsing="false" text="Add Node">
                           <items>
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <SeparatorMenuItem mnemonicParsing="false">
@@ -64,8 +64,8 @@
                               <MenuItem mnemonicParsing="false" onAction="#addMapEvent" text="Map" />
                           </items>
                         </MenuButton>
-                        <Button fx:id="buttonUp" layoutX="124.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#upEventHandler" prefHeight="25.0" prefWidth="51.0" text="Up" />
-                        <Button fx:id="buttonDown" layoutX="183.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#downEventHandler" prefHeight="25.0" prefWidth="50.0" text="Down" />
+                        <Button fx:id="buttonUp" layoutX="130.0" layoutY="5.0" mnemonicParsing="false" onMouseClicked="#upEventHandler" prefHeight="25.0" prefWidth="51.0" text="Up" />
+                        <Button fx:id="buttonDown" layoutX="188.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#downEventHandler" prefHeight="25.0" prefWidth="50.0" text="Down" />
                      </children>
                   </AnchorPane>
                   <TableView fx:id="tblvProperties" prefHeight="200.0" prefWidth="200.0">
@@ -81,6 +81,7 @@
                <children>
                   <MediaView fx:id="mediaView" fitHeight="723.0" fitWidth="746.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
                   <ImageView fx:id="imageView" fitHeight="723.0" fitWidth="746.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Label fx:id="lblPreviewStatus" alignment="CENTER" layoutX="345.0" layoutY="362.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children></AnchorPane>
         </items>
       </SplitPane>

@@ -47,14 +47,7 @@ public abstract class LinkNode {
     public Map<String, String> getDict() {
         return _attr;
     }
-    public int attrSize() {
-        return _attr.size();
-    }
 
-    public void printAttributes() {
-        _attr.forEach((k,v) -> System.out.print(k+" : "+v + ", "));
-        System.out.println("");
-    }
 
     public static DataNode findDataNode(String ref, List<DataNode> nodeList){
         for (DataNode n : nodeList) {
