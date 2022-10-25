@@ -389,7 +389,7 @@ public class Main extends Application {
                 Collections.swap(item.getParent().getChildren(), j, j + 1);
             }
             else {
-                popup("Item cannot move any further", Alert.AlertType.ERROR,"ERROR");
+                popup("Item cannot move any further", Alert.AlertType.ERROR,"Error");
             }
 
         }
@@ -401,6 +401,11 @@ public class Main extends Application {
 
     //// QUALITY OF LIFE METHODS ////
     static void findPos(TreeItem<LinkNode> item, DataNode type) {
+        if(item == null) {
+            popup("Please select a node to add to", Alert.AlertType.WARNING,"Warning");
+            return;
+
+        }
         for (LinkNode n : collectionNodes) {
             if (n.get_node().equals(item.getValue().get_node())) {
                 addElem(n, item, type);
