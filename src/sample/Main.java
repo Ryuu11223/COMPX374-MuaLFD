@@ -245,15 +245,28 @@ public class Main extends Application {
     }
 
     static void propertyChange(String key, String value, LinkNode item) {
+
         if (key.equals("id"))
             try {
                 Integer.parseInt(value);
                 for (DataNode d: dataNodes) {
-                    if (d.get("id") != null)
+                    if (d.get("id") != null){
                         if (d.get("id").equals(value) || value.equals("1")) {
                             popup("This id Already exists", Alert.AlertType.WARNING, "Warning!");
                             return;
                         }
+
+
+                    }
+                }
+
+                refCount.put(item.get_node().get("id"),refCount.get(item.get_node().get("id"))-1);
+                if(refCount.containsKey(value)){
+
+                    refCount.put(value, refCount.get(value) + 1);
+                }
+                else{
+                    refCount.put(value,1);
                 }
             }
             catch (Exception ex){
@@ -276,6 +289,8 @@ public class Main extends Application {
                 }
             }
         }
+
+
     }
 
     static void expandArgument(String key, String value, LinkNode item) throws IOException {
