@@ -16,12 +16,20 @@ public class Controller extends Main implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        property.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Map.Entry<String, String>, String>>() {
+            @Override
+            public void handle(TableColumn.CellEditEvent<Map.Entry<String, String>, String> event) {
+
+                propertyChange(event.getOldValue(), event.getNewValue(), item.getValue());
+                refreshTable();
+            }
+        });
 
         argument.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Map.Entry<String, String>, String>>() {
             @Override
             public void handle(TableColumn.CellEditEvent<Map.Entry<String, String>, String> event) {
-                String key = event.getRowValue().getKey(), value = event.getNewValue();
-                propertyChange(key, value, item.getValue());
+
+                argumentChange(event.getRowValue().getKey(), event.getNewValue(), item.getValue());
                 refreshTable();
             }
         });

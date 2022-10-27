@@ -242,9 +242,34 @@ public class Main extends Application {
         //Makes the argument column editable. Must double-click.
         tblvProperties.setEditable(true);
         argument.setCellFactory(TextFieldTableCell.forTableColumn());
+        property.setCellFactory(TextFieldTableCell.forTableColumn());
+
     }
 
-    static void propertyChange(String key, String value, LinkNode item) {
+    static void propertyChange(String currKey, String newKey, LinkNode item) {
+        if(item.get_node().getDict().containsKey(newKey)){
+            popup("This key aleady exists!",Alert.AlertType.WARNING,"Warning!");
+            return;
+        }
+        if(currKey.equals("id")){
+            popup("The field id cannot be edited as this may cause issues with the references",Alert.AlertType.WARNING,"Warning!");
+            return;
+        }
+        for (LinkNode n : collectionNodes) {
+            for (LinkNode k: n.getChildren()) {
+                if(k.get_node().equals(item.get_node())){
+                    k.get_node().set(newKey,k.get_node().get(currKey));
+                    k.get_node().getDict().remove(currKey);
+
+                }
+            }
+        }
+
+
+
+    }
+
+    static void argumentChange(String key, String value, LinkNode item) {
 
         if (key.equals("id"))
             try {

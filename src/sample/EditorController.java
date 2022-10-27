@@ -47,7 +47,7 @@ public class EditorController extends Main{
     void confirmHandler(){
         value = textArea.getText();
         stage = (Stage) btnConfirm.getScene().getWindow();
-        propertyChange(key,value,item);
+        argumentChange(key,value,item);
         stage.close();
     }
 
