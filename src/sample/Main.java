@@ -168,7 +168,6 @@ public class Main extends Application {
 
         }
         catch (Exception ex){
-            System.out.println(ex.toString());
         }
     }
 
@@ -181,9 +180,14 @@ public class Main extends Application {
 
     //// TABLE MANIPULATION ////
     static void InitialiseProperties(LinkNode item, TableColumn<Map.Entry<String, String>, String> property,TableColumn<Map.Entry<String, String>, String> argument, TableColumn<Map.Entry<String, String>, Void> buttonColumn, TableView<Map.Entry<String, String>> tblvProperties){
-
         //Gets attribute map
-        Map<String,String> map = item.get_node().getDict();
+        Map<String,String> map = null;
+        for (DataNode n: dataNodes) {
+            if (n.equals(item.get_node())){
+                map = n.getDict();
+            }
+        }
+
 
         //Overwrite get method to extract from Map
         property.setId("Key");
@@ -243,13 +247,20 @@ public class Main extends Application {
         tblvProperties.setEditable(true);
         argument.setCellFactory(TextFieldTableCell.forTableColumn());
         property.setCellFactory(TextFieldTableCell.forTableColumn());
-
     }
 
     static void propertyChange(String currKey, String newKey, LinkNode item) {
         if(item.get_node().getDict().containsKey(newKey)){
             popup("This key aleady exists!",Alert.AlertType.WARNING,"Warning!");
             return;
+        }
+        if (currKey == null){
+            for (DataNode n: dataNodes ) {
+                if (n.equals(item.get_node())){
+                    n.set(newKey,"");
+                    return;
+                }
+            }
         }
         if(currKey.equals("id")){
             popup("The field id cannot be edited as this may cause issues with the references",Alert.AlertType.WARNING,"Warning!");
@@ -280,8 +291,6 @@ public class Main extends Application {
                             popup("This id Already exists", Alert.AlertType.WARNING, "Warning!");
                             return;
                         }
-
-
                     }
                 }
 
@@ -419,7 +428,6 @@ public class Main extends Application {
 
         }
         catch (Exception ex){
-            System.out.println(ex.toString());
         }
     }
 
@@ -469,7 +477,6 @@ public class Main extends Application {
             if (!(refCount.containsKey(String.valueOf(i)))) {
                 refCount.put(String.valueOf(i), 1);
                 node.set("id", String.valueOf(i));
-                System.out.println(node.get("id"));
                 return;
             }
         }

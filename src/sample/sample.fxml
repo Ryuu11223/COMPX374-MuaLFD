@@ -19,7 +19,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="818.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <center>
-      <SplitPane dividerPositions="0.374749498997996" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <SplitPane fx:id="scene" dividerPositions="0.374749498997996" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
             <SplitPane dividerPositions="0.5195954487989887, 0.5714285714285714" orientation="VERTICAL" SplitPane.resizableWithParent="false">
               <items>

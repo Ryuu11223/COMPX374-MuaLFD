@@ -3,6 +3,7 @@ package sample;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -19,15 +20,19 @@ public class EditorController extends Main{
     public Button btnFilePath;
     @FXML
     private TextArea textArea;
+    @FXML
+    private TextField textField;
 
     public Stage stage;
 
-    private String key, value;;
+    private String key, value;
     private LinkNode item;
 
     public void setKey(String key) {
         this.key = key;
+        textField.setText(key);
     }
+
 
     public void setValue(String value) {
         this.value = value;
@@ -45,9 +50,11 @@ public class EditorController extends Main{
     }
     @FXML
     void confirmHandler(){
-        value = textArea.getText();
         stage = (Stage) btnConfirm.getScene().getWindow();
-        argumentChange(key,value,item);
+        if (key.equals(textField.getText())){
+            propertyChange(key, textField.getText(),item);
+        }
+        argumentChange(key, textArea.getText(),item);
         stage.close();
     }
 
