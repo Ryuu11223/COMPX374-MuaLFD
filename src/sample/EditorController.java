@@ -51,7 +51,9 @@ public class EditorController extends Main{
     @FXML
     void confirmHandler(){
         stage = (Stage) btnConfirm.getScene().getWindow();
-        if (key.equals(textField.getText())){
+        System.out.println(key);
+        System.out.println(textField.getText());
+        if (!key.equals(textField.getText())){
             propertyChange(key, textField.getText(),item);
         }
         argumentChange(key, textArea.getText(),item);
